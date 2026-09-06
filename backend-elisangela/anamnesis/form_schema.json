@@ -1,0 +1,1609 @@
+{
+  "version": "1.0",
+  "title": "Formulário de Anamnese",
+  "subtitle": "Um olhar completo sobre sua história, seu momento e suas necessidades",
+  "instructions": "Responda no seu ritmo. Não há respostas certas ou erradas; os temas podem ser aprofundados durante o atendimento.",
+  "identification": [
+    {
+      "id": "name",
+      "label": "Nome",
+      "type": "text",
+      "required": true
+    },
+    {
+      "id": "birth_date",
+      "label": "Data de nascimento",
+      "type": "date",
+      "required": false
+    },
+    {
+      "id": "rg",
+      "label": "RG",
+      "type": "text",
+      "required": false
+    },
+    {
+      "id": "cpf",
+      "label": "CPF",
+      "type": "text",
+      "required": true
+    },
+    {
+  "id": "marital_status",
+  "label": "Estado civil",
+  "type": "radio",
+  "required": false,
+  "options": [
+    "Solteira(o)",
+    "Casada(o)",
+    "União estável",
+    "Divorciada(o)",
+    "Viúva(o)",
+    "Prefiro não informar"
+  ]
+},
+    {
+  "id": "education",
+  "label": "Escolaridade",
+  "type": "radio",
+  "required": false,
+  "options": [
+    "Ensino fundamental incompleto",
+    "Ensino fundamental completo",
+    "Ensino médio incompleto",
+    "Ensino médio completo",
+    "Ensino superior incompleto",
+    "Ensino superior completo",
+    "Pós-graduação",
+    "Mestrado",
+    "Doutorado",
+    "Prefiro não informar"
+  ]
+},
+{
+  "id": "address",
+  "label": "Endereço",
+  "type": "text",
+  "required": false
+},
+    {
+      "id": "postal_code",
+      "label": "CEP",
+      "type": "text",
+      "required": false
+    },
+    {
+      "id": "city_state",
+      "label": "Bairro / cidade / UF",
+      "type": "text",
+      "required": false
+    },
+    {
+      "id": "address_extra",
+      "label": "Complemento",
+      "type": "text",
+      "required": false
+    },
+    {
+      "id": "phone",
+      "label": "Telefone",
+      "type": "tel",
+      "required": false
+    },
+    {
+      "id": "mobile_phone",
+      "label": "Celular",
+      "type": "tel",
+      "required": true
+    },
+    {
+      "id": "email",
+      "label": "E-mail",
+      "type": "email",
+      "required": true
+    },
+    {
+      "id": "religion",
+      "label": "Religião",
+      "type": "text",
+      "required": false
+    },
+    {
+      "id": "occupation",
+      "label": "Profissão / atividade",
+      "type": "text",
+      "required": false
+    },
+    {
+      "id": "company_role",
+      "label": "Empresa / cargo",
+      "type": "text",
+      "required": false
+    }
+  ],
+  "questions": [
+    {
+      "id": "q001",
+      "number": 1,
+      "section": "Queixa principal",
+      "question": "Queixa Principal – O que te trouxe até aqui?",
+      "type": "textarea",
+      "required": true
+    },
+    {
+      "id": "q002",
+      "number": 2,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "É casada (o), solteira (o) ou divorciada (o)?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q003",
+      "number": 3,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Se é divorciada (o), por qual motivo e como se sente?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q002",
+        "operator": "contains",
+        "value": "divorci"
+      }
+    },
+    {
+      "id": "q004",
+      "number": 4,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Número de filhos:",
+      "type": "number",
+      "required": false
+    },
+    {
+      "id": "q005",
+      "number": 5,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Como é o seu relacionamento com seus filhos?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q006",
+      "number": 6,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Como você se sente em seu relacionamento com sua parceira (o)?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q007",
+      "number": 7,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Como você se sente em sua casa, dentro do contexto familiar?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q008",
+      "number": 8,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Como você se sente no seu trabalho?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q009",
+      "number": 9,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Você se sente pertencendo ao Contexto Familiar?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q010",
+      "number": 10,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Por quê?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q011",
+      "number": 11,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Você se sente pertencendo ao Contexto Social?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q012",
+      "number": 12,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Por quê?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q013",
+      "number": 13,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Você se sente pertencendo ao Contexto Religioso?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q014",
+      "number": 14,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Por quê?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q015",
+      "number": 15,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Você sente frustração em relação a",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q016",
+      "number": 16,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Pais?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q017",
+      "number": 17,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Irmãos?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q018",
+      "number": 18,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Filhos?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q019",
+      "number": 19,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Profissão?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q020",
+      "number": 20,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Colégio?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q021",
+      "number": 21,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Cônjuge?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q022",
+      "number": 22,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Identidade Sexual?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q023",
+      "number": 23,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Vida Sexual?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q024",
+      "number": 24,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Por quê?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q025",
+      "number": 25,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Iniciou sua sexualidade com que idade?",
+      "type": "number",
+      "required": false
+    },
+    {
+      "id": "q026",
+      "number": 26,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Como foi sua primeira vez?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Traumática",
+        "Normal",
+        "Boa",
+        "Satisfatória"
+      ]
+    },
+    {
+      "id": "q027",
+      "number": 27,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Tem tido algum problema em relação ao sexo?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q028",
+      "number": 28,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Atualmente sempre se realiza nas relações sexuais?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q029",
+      "number": 29,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "O sexo para você é algo:",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Importante",
+        "Sem importância",
+        "Muito importante"
+      ]
+    },
+    {
+      "id": "q030",
+      "number": 30,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Algum trauma?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q031",
+      "number": 31,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Qual?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q030",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q032",
+      "number": 32,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Alguma fobia?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q033",
+      "number": 33,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Qual?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q032",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q034",
+      "number": 34,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Tem medo de alguma coisa?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q035",
+      "number": 35,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "De quê?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q034",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q036",
+      "number": 36,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Usa drogas?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q037",
+      "number": 37,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Quais?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q036",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q038",
+      "number": 38,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Dores de cabeça?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q039",
+      "number": 39,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Com que frequência?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q038",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q040",
+      "number": 40,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Insônia?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q041",
+      "number": 41,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Com que frequência?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q040",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q042",
+      "number": 42,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Tem ideias suicidas?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q043",
+      "number": 43,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Quais?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q042",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q044",
+      "number": 44,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Usa bebidas alcoólicas?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q045",
+      "number": 45,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Com que frequência?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q044",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q046",
+      "number": 46,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "É fumante?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q047",
+      "number": 47,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Está grávida?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q048",
+      "number": 48,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Quantas semanas?",
+      "type": "number",
+      "required": false,
+      "show_when": {
+        "question_id": "q047",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q049",
+      "number": 49,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Qual o seu nível de stress?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Alto",
+        "Médio",
+        "Baixo"
+      ]
+    },
+    {
+      "id": "q050",
+      "number": 50,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Atualmente está tomando alguma medicação?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q051",
+      "number": 51,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Qual?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q050",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q052",
+      "number": 52,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Algum trauma?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q053",
+      "number": 53,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Qual?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q052",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q054",
+      "number": 54,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Já consultou algum tipo de psiquiatra ou psicólogo?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q055",
+      "number": 55,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Se sim, foi diagnosticada (o)?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ],
+      "show_when": {
+        "question_id": "q054",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q056",
+      "number": 56,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Qual a quantidade de amigos que você tem?",
+      "type": "number",
+      "required": false
+    },
+    {
+      "id": "q057",
+      "number": 57,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Qual seu passatempo preferido?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q058",
+      "number": 58,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Qual a principal a crença que as pessoas possuem em relação a você que mais se repete?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q059",
+      "number": 59,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Você se considera feliz?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q060",
+      "number": 60,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Por quê?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q061",
+      "number": 61,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Se você pudesse mudar alguma coisa em você, no seu modo de ser, ou agir, ou no seu comportamento atual, o que mudaria?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q062",
+      "number": 62,
+      "section": "Fase 01 — Vida Pessoal",
+      "question": "Defina o que é a vida em apenas uma frase",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q063",
+      "number": 63,
+      "section": "Fase 02 — Mental",
+      "question": "Quais são os tipos de pensamentos que você costuma alimentar em relação a si mesma (o), de uma maneira geral?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Positivos",
+        "Negativos"
+      ]
+    },
+    {
+      "id": "q064",
+      "number": 64,
+      "section": "Fase 02 — Mental",
+      "question": "Quais exatamente?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q065",
+      "number": 65,
+      "section": "Fase 02 — Mental",
+      "question": "Em relação a sua aparência física?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Positivos",
+        "Negativos"
+      ]
+    },
+    {
+      "id": "q066",
+      "number": 66,
+      "section": "Fase 02 — Mental",
+      "question": "Quais exatamente?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q067",
+      "number": 67,
+      "section": "Fase 02 — Mental",
+      "question": "Em relação a sua competência profissional?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Positivos",
+        "Negativos"
+      ]
+    },
+    {
+      "id": "q068",
+      "number": 68,
+      "section": "Fase 02 — Mental",
+      "question": "Quais exatamente?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q069",
+      "number": 69,
+      "section": "Fase 02 — Mental",
+      "question": "Em relação a sua vida emocional?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Positivos",
+        "Negativos"
+      ]
+    },
+    {
+      "id": "q070",
+      "number": 70,
+      "section": "Fase 02 — Mental",
+      "question": "Quais exatamente?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q071",
+      "number": 71,
+      "section": "Fase 02 — Mental",
+      "question": "Em relação a sua vida sexual?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Positivos",
+        "Negativos"
+      ]
+    },
+    {
+      "id": "q072",
+      "number": 72,
+      "section": "Fase 02 — Mental",
+      "question": "Quais exatamente?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q073",
+      "number": 73,
+      "section": "Fase 02 — Mental",
+      "question": "Em relação ao seu passado?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Positivos",
+        "Negativos"
+      ]
+    },
+    {
+      "id": "q074",
+      "number": 74,
+      "section": "Fase 02 — Mental",
+      "question": "Quais exatamente?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q075",
+      "number": 75,
+      "section": "Fase 02 — Mental",
+      "question": "Em relação ao seu futuro?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Positivos",
+        "Negativos"
+      ]
+    },
+    {
+      "id": "q076",
+      "number": 76,
+      "section": "Fase 02 — Mental",
+      "question": "Quais exatamente?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q077",
+      "number": 77,
+      "section": "Fase 02 — Mental",
+      "question": "Qual sua visão sobre você?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q078",
+      "number": 78,
+      "section": "Fase 03 — Infância",
+      "question": "Você foi criado pelos pais?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q079",
+      "number": 79,
+      "section": "Fase 03 — Infância",
+      "question": "Como é sua relação com seus pais?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q080",
+      "number": 80,
+      "section": "Fase 03 — Infância",
+      "question": "Pai",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q081",
+      "number": 81,
+      "section": "Fase 03 — Infância",
+      "question": "Mãe",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q082",
+      "number": 82,
+      "section": "Fase 03 — Infância",
+      "question": "Seus pais foram agressivos com você?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q083",
+      "number": 83,
+      "section": "Fase 03 — Infância",
+      "question": "Qual deles era o mais bravo?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "O Pai",
+        "A Mãe"
+      ]
+    },
+    {
+      "id": "q084",
+      "number": 84,
+      "section": "Fase 03 — Infância",
+      "question": "Usavam bebidas ou drogas?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q085",
+      "number": 85,
+      "section": "Fase 03 — Infância",
+      "question": "Como você descreveria o relacionamento entre seus pais?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Excelente",
+        "Muito Bom",
+        "Bom",
+        "Regular",
+        "Péssimo"
+      ]
+    },
+    {
+      "id": "q086",
+      "number": 86,
+      "section": "Fase 03 — Infância",
+      "question": "Por quê?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q087",
+      "number": 87,
+      "section": "Fase 03 — Infância",
+      "question": "Quais os aspectos deste relacionamento que se assemelham, ou se repetem em sua vida hoje?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q088",
+      "number": 88,
+      "section": "Fase 03 — Infância",
+      "question": "Quais as características deste relacionamento, que você se mantém determinada (o) a não repetir?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q089",
+      "number": 89,
+      "section": "Fase 03 — Infância",
+      "question": "Por quê?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q090",
+      "number": 90,
+      "section": "Fase 03 — Infância",
+      "question": "Quanto ao relacionamento de seus pais responda: Qual a crença que você adquiriu em relação a relacionamentos?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q091",
+      "number": 91,
+      "section": "Fase 03 — Infância",
+      "question": "Na infância, era obrigada (o) a fazer alguma coisa que lhe desagradava?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q092",
+      "number": 92,
+      "section": "Fase 03 — Infância",
+      "question": "Lembra-se, de alguma coisa que o magoou muito na Infância?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q093",
+      "number": 93,
+      "section": "Fase 03 — Infância",
+      "question": "Teve perdas familiares ou de amigos na Infância?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q094",
+      "number": 94,
+      "section": "Fase 03 — Infância",
+      "question": "O que te faz sentir tristeza ao relembrar do passado?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q095",
+      "number": 95,
+      "section": "Fase 03 — Infância",
+      "question": "Quando criança tinha medo de que?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q096",
+      "number": 96,
+      "section": "Fase 03 — Infância",
+      "question": "Dormia com a luz acesa ou apagada?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Acesa",
+        "Apagada"
+      ]
+    },
+    {
+      "id": "q097",
+      "number": 97,
+      "section": "Fase 03 — Infância",
+      "question": "Como foi sua adolescência?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Ruim",
+        "Boa",
+        "Ótima"
+      ]
+    },
+    {
+      "id": "q098",
+      "number": 98,
+      "section": "Fase 03 — Infância",
+      "question": "Teve fase de rebeldia na adolescência?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q099",
+      "number": 99,
+      "section": "Fase 03 — Infância",
+      "question": "Com qual de seus pais você tinha mais dificuldade de relacionamento?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Pai",
+        "Mãe",
+        "Ambos"
+      ]
+    },
+    {
+      "id": "q100",
+      "number": 100,
+      "section": "Fase 03 — Infância",
+      "question": "Qual a Filosofia de sua família em relação ao sucesso profissional?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q101",
+      "number": 101,
+      "section": "Fase 03 — Infância",
+      "question": "Ao dinheiro?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q102",
+      "number": 102,
+      "section": "Fase 03 — Infância",
+      "question": "Ao amor?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q103",
+      "number": 103,
+      "section": "Fase 03 — Infância",
+      "question": "Ao sexo?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q104",
+      "number": 104,
+      "section": "Fase 03 — Infância",
+      "question": "O que era para você, ser uma boa (bom) menina (o)? Descreva.",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q105",
+      "number": 105,
+      "section": "Fase 03 — Infância",
+      "question": "Como você deveria agir, ou ser para ser amada (o)?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q106",
+      "number": 106,
+      "section": "Fase 03 — Infância",
+      "question": "Possui irmãos?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Não",
+        "Sim – Quantos?"
+      ]
+    },
+    {
+      "id": "q107",
+      "number": 107,
+      "section": "Fase 03 — Infância",
+      "question": "Como é sua relação com eles?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q108",
+      "number": 108,
+      "section": "Fase 03 — Infância",
+      "question": "Você foi uma criança introvertida ou extrovertida?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q109",
+      "number": 109,
+      "section": "Fase 03 — Infância",
+      "question": "Havia dificuldades de relacionamentos com os colegas do colégio? Se sim, cite-os.",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q110",
+      "number": 110,
+      "section": "Fase 03 — Infância",
+      "question": "Quais eram seus maiores medos na infância?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q111",
+      "number": 111,
+      "section": "Fase 03 — Infância",
+      "question": "Relate algum fato marcante em sua infância",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q112",
+      "number": 112,
+      "section": "Fase 04 — Emocional",
+      "question": "Quais são seus maiores medos hoje?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q113",
+      "number": 113,
+      "section": "Fase 04 — Emocional",
+      "question": "O que você pensa a seu respeito?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q114",
+      "number": 114,
+      "section": "Fase 04 — Emocional",
+      "question": "Como foi o seu primeiro relacionamento amoroso?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q115",
+      "number": 115,
+      "section": "Fase 04 — Emocional",
+      "question": "Se você avaliasse sua atuação na vida, qual papel que mais caberia a você hoje?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q116",
+      "number": 116,
+      "section": "Fase 04 — Emocional",
+      "question": "Vítima ou Responsável?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q117",
+      "number": 117,
+      "section": "Fase 04 — Emocional",
+      "question": "Qual o ganho secundário?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q118",
+      "number": 118,
+      "section": "Fase 04 — Emocional",
+      "question": "Em quais situações você desempenha o papel de vítima?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q119",
+      "number": 119,
+      "section": "Fase 04 — Emocional",
+      "question": "Em quais situações você desempenha o papel de responsável?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q120",
+      "number": 120,
+      "section": "Fase 04 — Emocional",
+      "question": "Se considera vitoriosa(o) ou derrotada(o)?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q121",
+      "number": 121,
+      "section": "Fase 04 — Emocional",
+      "question": "Nos relacionamentos e na vida, você prefere ser:",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Dominante",
+        "Submisso"
+      ]
+    },
+    {
+      "id": "q122",
+      "number": 122,
+      "section": "Fase 04 — Emocional",
+      "question": "Quem é o culpado por seus problemas pessoais?",
+      "type": "textarea",
+      "required": false
+    },
+    {
+      "id": "q123",
+      "number": 123,
+      "section": "Fase 04 — Emocional",
+      "question": "Sente raiva ou rancor de alguém?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Não",
+        "Sim – Quem?"
+      ]
+    },
+    {
+      "id": "q124",
+      "number": 124,
+      "section": "Fase 04 — Emocional",
+      "question": "Sente-se de alguma forma pressionada (o) na atualidade?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q125",
+      "number": 125,
+      "section": "Fase 04 — Emocional",
+      "question": "De que maneira?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q124",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q126",
+      "number": 126,
+      "section": "Fase 04 — Emocional",
+      "question": "Você se acha uma pessoa controladora?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q127",
+      "number": 127,
+      "section": "Fase 04 — Emocional",
+      "question": "Sente-se de alguma forma inferior aos outros?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q128",
+      "number": 128,
+      "section": "Fase 04 — Emocional",
+      "question": "Por quê?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q127",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    },
+    {
+      "id": "q129",
+      "number": 129,
+      "section": "Fase 04 — Emocional",
+      "question": "Duvida de sua própria capacidade?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q130",
+      "number": 130,
+      "section": "Fase 04 — Emocional",
+      "question": "Você é audaciosa (o), corre atrás de suas metas, ou é auto protetor(a), preferindo se poupar dos eventuais riscos?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Audaciosa(o)",
+        "Auto protetor(a)"
+      ]
+    },
+    {
+      "id": "q131",
+      "number": 131,
+      "section": "Fase 04 — Emocional",
+      "question": "Existe algo que a(o) faz sentir-se culpada(o)?",
+      "type": "radio",
+      "required": false,
+      "options": [
+        "Sim",
+        "Não"
+      ]
+    },
+    {
+      "id": "q132",
+      "number": 132,
+      "section": "Fase 04 — Emocional",
+      "question": "O que exatamente?",
+      "type": "textarea",
+      "required": false,
+      "show_when": {
+        "question_id": "q131",
+        "operator": "equals",
+        "value": "Sim"
+      }
+    }
+  ],
+  "feelings_map": {
+    "title": "Mapa de Sentimentos",
+    "question": "Quais os sentimentos mais comuns em você hoje?",
+    "type": "intensity_grid",
+    "options": [
+      "Pouca intensidade",
+      "Média intensidade",
+      "Muita intensidade"
+    ],
+    "feelings": [
+      {
+        "id": "feeling_01",
+        "label": "Raiva"
+      },
+      {
+        "id": "feeling_02",
+        "label": "Medo de algo concreto"
+      },
+      {
+        "id": "feeling_03",
+        "label": "Medos vagos"
+      },
+      {
+        "id": "feeling_04",
+        "label": "Culpa"
+      },
+      {
+        "id": "feeling_05",
+        "label": "Revolta"
+      },
+      {
+        "id": "feeling_06",
+        "label": "Medo de perder o controle"
+      },
+      {
+        "id": "feeling_07",
+        "label": "Tristeza"
+      },
+      {
+        "id": "feeling_08",
+        "label": "Mágoa"
+      },
+      {
+        "id": "feeling_09",
+        "label": "Orgulho"
+      },
+      {
+        "id": "feeling_10",
+        "label": "Ódio"
+      },
+      {
+        "id": "feeling_11",
+        "label": "Egoísmo"
+      },
+      {
+        "id": "feeling_12",
+        "label": "Ansiedade"
+      },
+      {
+        "id": "feeling_13",
+        "label": "Intolerância"
+      },
+      {
+        "id": "feeling_14",
+        "label": "Submissão"
+      },
+      {
+        "id": "feeling_15",
+        "label": "Indecisão"
+      },
+      {
+        "id": "feeling_16",
+        "label": "Desespero"
+      },
+      {
+        "id": "feeling_17",
+        "label": "Desânimo"
+      },
+      {
+        "id": "feeling_18",
+        "label": "Covardia"
+      },
+      {
+        "id": "feeling_19",
+        "label": "Egocentrismo"
+      },
+      {
+        "id": "feeling_20",
+        "label": "Ciúme"
+      },
+      {
+        "id": "feeling_21",
+        "label": "Frustração"
+      },
+      {
+        "id": "feeling_22",
+        "label": "Nostalgia"
+      },
+      {
+        "id": "feeling_23",
+        "label": "Cansaço"
+      },
+      {
+        "id": "feeling_24",
+        "label": "Impaciência"
+      },
+      {
+        "id": "feeling_25",
+        "label": "Angústia"
+      },
+      {
+        "id": "feeling_26",
+        "label": "Timidez"
+      },
+      {
+        "id": "feeling_27",
+        "label": "Apatia"
+      },
+      {
+        "id": "feeling_28",
+        "label": "Ressentimento"
+      },
+      {
+        "id": "feeling_29",
+        "label": "Solidão"
+      },
+      {
+        "id": "feeling_30",
+        "label": "Autoritarismo"
+      }
+    ]
+  },
+  "additional_notes": {
+    "id": "additional_notes",
+    "label": "Observações adicionais",
+    "type": "textarea",
+    "required": false
+  }
+}
