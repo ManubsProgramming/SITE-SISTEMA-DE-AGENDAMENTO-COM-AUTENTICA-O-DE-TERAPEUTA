@@ -1,0 +1,144 @@
+.therapist-login {
+  align-items: center;
+  background:
+    radial-gradient(circle at 80% 15%, #dfe7dc 0, transparent 32%),
+    linear-gradient(135deg, #fbf8f2, #eee5d3);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 32px 20px;
+}
+
+.login-card {
+  backdrop-filter: blur(18px);
+  background: rgb(255 255 255 / 72%);
+  border: 1px solid rgb(255 255 255 / 90%);
+  border-radius: 30px;
+  box-shadow: 0 24px 70px rgb(58 49 38 / 14%);
+  max-width: 470px;
+  padding: 38px;
+  width: 100%;
+}
+
+.login-brand {
+  align-items: center;
+  color: #372f24;
+  display: flex;
+  gap: 14px;
+  text-decoration: none;
+}
+
+.login-brand > span {
+  align-items: center;
+  background: #373126;
+  border-radius: 50%;
+  color: #f1d8ad;
+  display: flex;
+  font-family: Georgia, serif;
+  height: 52px;
+  justify-content: center;
+  width: 52px;
+}
+
+.login-brand div {
+  display: grid;
+  gap: 3px;
+}
+
+.login-brand strong {
+  font-family: Georgia, serif;
+  font-size: 19px;
+}
+
+.login-brand small {
+  color: #a68973;
+}
+
+.login-heading {
+  margin: 45px 0 30px;
+}
+
+.login-heading p {
+  color: #a27b5d;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
+.login-heading h1 {
+  color: #382f24;
+  font-family: Georgia, serif;
+  font-size: 38px;
+  font-weight: 500;
+  margin: 0 0 12px;
+}
+
+.login-heading span {
+  color: #786d60;
+  line-height: 1.6;
+}
+
+.login-card form,
+.login-card label {
+  display: grid;
+  gap: 10px;
+}
+
+.login-card form {
+  gap: 20px;
+}
+
+.login-card label {
+  color: #62584c;
+  font-size: 14px;
+}
+
+.login-card input {
+  background: rgb(255 255 255 / 80%);
+  border: 1px solid #e5ddd2;
+  border-radius: 15px;
+  color: #372f24;
+  font: inherit;
+  outline: none;
+  padding: 16px;
+}
+
+.login-card input:focus {
+  border-color: #a48768;
+  box-shadow: 0 0 0 3px rgb(164 135 104 / 14%);
+}
+
+.login-card button {
+  background: #373126;
+  border: 0;
+  border-radius: 999px;
+  color: #fff5e5;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  margin-top: 6px;
+  padding: 16px;
+}
+
+.login-card button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.login-error {
+  background: #fff0ec;
+  border-radius: 12px;
+  color: #9e3f32;
+  font-size: 14px;
+  padding: 12px 14px;
+}
+
+.back-home {
+  color: #786d60;
+  display: block;
+  font-size: 14px;
+  margin-top: 24px;
+  text-align: center;
+}
