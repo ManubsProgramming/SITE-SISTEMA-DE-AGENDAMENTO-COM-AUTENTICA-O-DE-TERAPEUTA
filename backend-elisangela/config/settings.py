@@ -26,12 +26,18 @@ environ.Env.read_env(BASE_DIR / ".env")
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mur)=jt%wqp@6v6du3w=kwpo1bhie$6@8&bvs6y+0i)2+o2!pd'
-
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS",
+    default=["localhost", "127.0.0.1"],
+)
+
+
+
+
 ANAMNESIS_ACCESS_MINUTES = env.int(
     "ANAMNESIS_ACCESS_MINUTES",
     default=120,
@@ -57,10 +63,13 @@ INSTALLED_APPS = [
     "documents",
     "notifications",
     "dashboard",
+    "axes",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
@@ -68,6 +77,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
+
+]
+
+AUTHENTICATION_BACKENDS = [
+    "axes.backends.AxesStandaloneBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -86,22 +102,57 @@ TEMPLATES = [
         },
     },
 ]
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-
-]
+CORS_ALLOWED_ORIGINS = env.list(
+    "CORS_ALLOWED_ORIGINS",
+    default=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+)
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS",
+    default=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+)
+
+IS_PRODUCTION = not DEBUG
 
 SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = IS_PRODUCTION
 SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_AGE = 60 * 60
+SESSION_SAVE_EVERY_REQUEST = True
+
+CSRF_COOKIE_SECURE = IS_PRODUCTION
 CSRF_COOKIE_SAMESITE = "Lax"
+
+SECURE_SSL_REDIRECT = IS_PRODUCTION
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "same-origin"
+
+SECURE_PROXY_SSL_HEADER = (
+    "HTTP_X_FORWARDED_PROTO",
+    "https",
+)
+
+X_FRAME_OPTIONS = "DENY"
+
+SECURE_HSTS_SECONDS = env.int(
+    "SECURE_HSTS_SECONDS",
+    default=0,
+)
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS = (
+    SECURE_HSTS_SECONDS > 0
+)
+
+SECURE_HSTS_PRELOAD = False
+
 
 
 REST_FRAMEWORK = {
@@ -173,6 +224,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STORAGES = {
+    "default": {
+        "BACKEND": (
+            "django.core.files.storage.FileSystemStorage"
+        ),
+    },
+    "staticfiles": {
+        "BACKEND": (
+            "whitenoise.storage.CompressedManifestStaticFilesStorage"
+        ),
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -190,3 +255,7 @@ THERAPIST_EMAIL = env(
     default=EMAIL_HOST_USER,
 )
 EMAIL_TIMEOUT = 20
+
+AXES_LOCKOUT_CALLABLE = (
+    "dashboard.security.axes_lockout_response"
+)
