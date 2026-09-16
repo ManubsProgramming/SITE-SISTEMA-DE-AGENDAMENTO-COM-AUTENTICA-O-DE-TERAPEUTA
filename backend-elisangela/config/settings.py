@@ -182,7 +182,7 @@ DATABASES = {
         },
     }
 }
-ASAAS_API_KEY = env("ASAAS_API_KEY")
+ASAAS_API_KEY = os.environ["ASAAS_API_KEY"].strip()
 ASAAS_API_URL = env(
     "ASAAS_API_URL",
     default="https://api-sandbox.asaas.com/v3",
