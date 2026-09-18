@@ -1,6 +1,6 @@
 const API_URL =
-  import.meta.env.VITE_API_URL ?? "http://localhost:8000/api";
-
+  import.meta.env.VITE_API_URL ??
+  "http://localhost:8000/api";
 
 export type Therapist = {
   username: string;
@@ -8,12 +8,10 @@ export type Therapist = {
   email: string;
 };
 
-
 type AuthResponse = {
   authenticated: boolean;
   user: Therapist;
 };
-
 
 export type DashboardSummary = {
   summary: {
@@ -28,13 +26,12 @@ export type DashboardSummary = {
     id: string;
     customer_name: string;
     customer_email: string;
-       value: string;
+    value: string;
     status: string;
     created_at: string;
     paid_at: string | null;
   }>;
 };
-
 
 export type DashboardPayment = {
   id: string;
@@ -52,27 +49,84 @@ export type DashboardPayment = {
   display_expires_at: string | null;
 };
 
+export type DashboardCustomer = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  payment_count: number;
+  anamnesis_count: number;
+  created_at: string;
+  last_payment_at: string | null;
+};
+
+export type DashboardAnamnesis = {
+  id: string;
+  payment_id: string | null;
+  invitation_id: string | null;
+  form_version: string;
+  submitted_at: string;
+  customer: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+  };
+};
+
+export type DashboardAnamnesisDetail = {
+  id: string;
+  payment_id: string | null;
+  invitation_id: string | null;
+  form_version: string;
+  submitted_at: string;
+  answers: Record<string, unknown>;
+  customer: {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+  };
+  payment: {
+    value: string;
+    status: string;
+    paid_at: string | null;
+  } | null;
+};
+
+export type AnamnesisInvitationResult = {
+  invitation_id: string;
+  customer_id: string;
+  expires_at: string;
+  form_url: string;
+};
 
 let csrfToken = "";
-
 
 async function request<T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> {
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      ...options.headers,
+  const response = await fetch(
+    `${API_URL}${path}`,
+    {
+      ...options,
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        ...options.headers,
+      },
     },
-  });
+  );
 
   const contentType =
     response.headers.get("content-type") ?? "";
 
-  if (!contentType.includes("application/json")) {
+  if (
+    !contentType.includes(
+      "application/json",
+    )
+  ) {
     throw new Error(
       `O servidor respondeu ${response.status} em ${response.url}.`,
     );
@@ -90,17 +144,16 @@ async function request<T>(
   return data as T;
 }
 
-
-export async function prepareCsrf(): Promise<string> {
-  const data = await request<{ csrfToken: string }>(
-    "/dashboard/csrf/",
-  );
+export async function prepareCsrf():
+  Promise<string> {
+  const data = await request<{
+    csrfToken: string;
+  }>("/dashboard/csrf/");
 
   csrfToken = data.csrfToken;
 
   return csrfToken;
 }
-
 
 export async function therapistLogin(
   username: string,
@@ -110,45 +163,50 @@ export async function therapistLogin(
     await prepareCsrf();
   }
 
-  return request<AuthResponse>("/dashboard/login/", {
-    method: "POST",
-    headers: {
-      "X-CSRFToken": csrfToken,
-    },
-    body: JSON.stringify({
-      username,
-      password,
-    }),
-  });
-}
-
-
-export async function therapistLogout(): Promise<void> {
-  if (!csrfToken) {
-    await prepareCsrf();
-  }
-
-  await request<{ authenticated: boolean }>(
-    "/dashboard/logout/",
+  return request<AuthResponse>(
+    "/dashboard/login/",
     {
       method: "POST",
       headers: {
         "X-CSRFToken": csrfToken,
       },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
     },
   );
 }
 
+export async function therapistLogout():
+  Promise<void> {
+  if (!csrfToken) {
+    await prepareCsrf();
+  }
 
-export async function getCurrentTherapist(): Promise<AuthResponse> {
-  return request<AuthResponse>("/dashboard/me/");
+  await request<{
+    authenticated: boolean;
+  }>("/dashboard/logout/", {
+    method: "POST",
+    headers: {
+      "X-CSRFToken": csrfToken,
+    },
+  });
 }
 
-
-export async function getDashboardSummary(): Promise<DashboardSummary> {
-  return request<DashboardSummary>("/dashboard/summary/");
+export async function getCurrentTherapist():
+  Promise<AuthResponse> {
+  return request<AuthResponse>(
+    "/dashboard/me/",
+  );
 }
 
+export async function getDashboardSummary():
+  Promise<DashboardSummary> {
+  return request<DashboardSummary>(
+    "/dashboard/summary/",
+  );
+}
 
 export async function getDashboardPayments(
   search = "",
@@ -157,7 +215,10 @@ export async function getDashboardPayments(
   const parameters = new URLSearchParams();
 
   if (search.trim()) {
-    parameters.set("search", search.trim());
+    parameters.set(
+      "search",
+      search.trim(),
+    );
   }
 
   if (status) {
@@ -176,16 +237,6 @@ export async function getDashboardPayments(
 
   return data.payments;
 }
-export type DashboardCustomer = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  payment_count: number;
-  created_at: string;
-  last_payment_at: string | null;
-};
-
 
 export async function getDashboardCustomers(
   search = "",
@@ -193,7 +244,10 @@ export async function getDashboardCustomers(
   const parameters = new URLSearchParams();
 
   if (search.trim()) {
-    parameters.set("search", search.trim());
+    parameters.set(
+      "search",
+      search.trim(),
+    );
   }
 
   const query = parameters.toString();
@@ -208,19 +262,6 @@ export async function getDashboardCustomers(
 
   return data.customers;
 }
-export type DashboardAnamnesis = {
-  id: string;
-  payment_id: string;
-  form_version: string;
-  submitted_at: string;
-  customer: {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-  };
-};
-
 
 export async function getDashboardAnamneses(
   search = "",
@@ -228,7 +269,10 @@ export async function getDashboardAnamneses(
   const parameters = new URLSearchParams();
 
   if (search.trim()) {
-    parameters.set("search", search.trim());
+    parameters.set(
+      "search",
+      search.trim(),
+    );
   }
 
   const query = parameters.toString();
@@ -243,25 +287,6 @@ export async function getDashboardAnamneses(
 
   return data.anamneses;
 }
-export type DashboardAnamnesisDetail = {
-  id: string;
-  payment_id: string;
-  form_version: string;
-  submitted_at: string;
-  answers: Record<string, unknown>;
-  customer: {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-  };
-  payment: {
-    value: string;
-    status: string;
-    paid_at: string | null;
-  };
-};
-
 
 export async function getDashboardAnamnesisDetail(
   anamnesisId: string,
@@ -270,6 +295,32 @@ export async function getDashboardAnamnesisDetail(
     `/dashboard/anamneses/${anamnesisId}/`,
   );
 }
+
+export async function createAnamnesisInvitation(
+  name: string,
+  email: string,
+  phone: string,
+): Promise<AnamnesisInvitationResult> {
+  if (!csrfToken) {
+    await prepareCsrf();
+  }
+
+  return request<AnamnesisInvitationResult>(
+    "/dashboard/anamnesis-invitations/",
+    {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfToken,
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        phone,
+      }),
+    },
+  );
+}
+
 export async function downloadDashboardAnamnesisPdf(
   anamnesisId: string,
 ): Promise<void> {
@@ -285,34 +336,48 @@ export async function downloadDashboardAnamnesisPdf(
     const contentType =
       response.headers.get("content-type") ?? "";
 
-    if (contentType.includes("application/json")) {
+    if (
+      contentType.includes(
+        "application/json",
+      )
+    ) {
       const data = await response.json();
 
       throw new Error(
-        data.detail ?? "Não foi possível baixar o PDF.",
+        data.detail ??
+          "Não foi possível baixar o PDF.",
       );
     }
 
-    throw new Error("Não foi possível baixar o PDF.");
+    throw new Error(
+      "Não foi possível baixar o PDF.",
+    );
   }
 
   const blob = await response.blob();
-  const downloadUrl = URL.createObjectURL(blob);
+  const downloadUrl =
+    URL.createObjectURL(blob);
 
   const disposition =
-    response.headers.get("content-disposition") ?? "";
+    response.headers.get(
+      "content-disposition",
+    ) ?? "";
 
-  const filenameMatch = disposition.match(
-    /filename="?([^"]+)"?/,
-  );
+  const filenameMatch =
+    disposition.match(
+      /filename="?([^"]+)"?/,
+    );
 
   const filename =
-    filenameMatch?.[1] ?? `anamnese-${anamnesisId}.pdf`;
+    filenameMatch?.[1] ??
+    `anamnese-${anamnesisId}.pdf`;
 
-  const link = document.createElement("a");
+  const link =
+    document.createElement("a");
 
   link.href = downloadUrl;
   link.download = filename;
+
   document.body.appendChild(link);
   link.click();
   link.remove();

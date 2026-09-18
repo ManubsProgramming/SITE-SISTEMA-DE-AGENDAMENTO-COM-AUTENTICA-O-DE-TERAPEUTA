@@ -18,14 +18,17 @@ import { Link } from "react-router-dom";
 import QuestionField from "../components/QuestionField";
 import { apiRequest } from "../services/api";
 import type {
-  AccessData,
   FormAnswers,
   FormSchema,
   Question,
-
 } from "../types/anamnesis";
 
 type ResponseValue = string | string[];
+
+type InvitationAccess = {
+  invitationId: string;
+  accessToken: string;
+};
 
 type Step = {
   title: string;
@@ -50,16 +53,52 @@ const emptyAnswers: FormAnswers = {
   },
 };
 
-function getStoredAccess(): AccessData | null {
-  const stored = sessionStorage.getItem(
-    "anamnesis_access",
+function getInvitationAccess():
+  | InvitationAccess
+  | null {
+  const parameters = new URLSearchParams(
+    window.location.search,
   );
 
-  if (!stored) return null;
+  const invitationId = parameters.get(
+    "invitation_id",
+  );
+
+  const accessToken = parameters.get(
+    "access_token",
+  );
+
+  if (invitationId && accessToken) {
+    const access = {
+      invitationId,
+      accessToken,
+    };
+
+    sessionStorage.setItem(
+      "anamnesis_invitation_access",
+      JSON.stringify(access),
+    );
+
+    return access;
+  }
+
+  const stored = sessionStorage.getItem(
+    "anamnesis_invitation_access",
+  );
+
+  if (!stored) {
+    return null;
+  }
 
   try {
-    return JSON.parse(stored) as AccessData;
+    return JSON.parse(
+      stored,
+    ) as InvitationAccess;
   } catch {
+    sessionStorage.removeItem(
+      "anamnesis_invitation_access",
+    );
+
     return null;
   }
 }
@@ -112,8 +151,7 @@ function hasAnswer(value: ResponseValue) {
 }
 
 export default function AnamnesisPage() {
-  const formRef =
-    useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const preview =
     import.meta.env.DEV &&
@@ -121,10 +159,9 @@ export default function AnamnesisPage() {
       window.location.search,
     ).get("preview") === "1";
 
-  const [access] =
-    useState<AccessData | null>(
-      getStoredAccess,
-    );
+  const [access] = useState<
+    InvitationAccess | null
+  >(getInvitationAccess);
 
   const [schema, setSchema] =
     useState<FormSchema | null>(null);
@@ -168,24 +205,25 @@ export default function AnamnesisPage() {
   }, [answers]);
 
   const steps = useMemo<Step[]>(() => {
-  if (!schema) return [];
+    if (!schema) {
+      return [];
+    }
 
-  const questions =
-    schema.questions;
+    const questions = schema.questions;
 
-  function questionsFrom(
-    ...sections: string[]
-  ) {
-    return questions.filter(
-      (question) =>
-        !question.hidden &&
-        sections.some((section) =>
-          question.section.includes(
-            section,
+    function questionsFrom(
+      ...sections: string[]
+    ) {
+      return questions.filter(
+        (question) =>
+          !question.hidden &&
+          sections.some((section) =>
+            question.section.includes(
+              section,
+            ),
           ),
-        ),
-    );
-  }
+      );
+    }
 
     return [
       {
@@ -209,27 +247,21 @@ export default function AnamnesisPage() {
         description:
           "Um olhar sobre seus pensamentos e percepções.",
         type: "questions",
-        questions: questionsFrom(
-          "Mental",
-        ),
+        questions: questionsFrom("Mental"),
       },
       {
         title: "Infância",
         description:
           "Responda somente o que se sentir confortável.",
         type: "questions",
-        questions: questionsFrom(
-          "Infância",
-        ),
+        questions: questionsFrom("Infância"),
       },
       {
         title: "Emocional",
         description:
           "Fale sobre sentimentos, medos e escolhas.",
         type: "questions",
-        questions: questionsFrom(
-          "Emocional",
-        ),
+        questions: questionsFrom("Emocional"),
       },
       {
         title: "Sentimentos",
@@ -351,10 +383,7 @@ export default function AnamnesisPage() {
 
   function previousStep() {
     setStepIndex((current) =>
-      Math.max(
-        current - 1,
-        0,
-      ),
+      Math.max(current - 1, 0),
     );
 
     goToTop();
@@ -367,10 +396,8 @@ export default function AnamnesisPage() {
     setError("");
 
     if (
-      !answers.consent
-        .privacy_accepted ||
-      !answers.consent
-        .truthfulness_accepted
+      !answers.consent.privacy_accepted ||
+      !answers.consent.truthfulness_accepted
     ) {
       setError(
         "Aceite os dois termos para enviar a anamnese.",
@@ -385,7 +412,7 @@ export default function AnamnesisPage() {
 
     if (!access) {
       setError(
-        "O acesso à anamnese não está disponível.",
+        "O convite para a anamnese não está disponível.",
       );
       return;
     }
@@ -398,21 +425,21 @@ export default function AnamnesisPage() {
         {
           method: "POST",
           body: JSON.stringify({
-            payment_id:
-              access.paymentId,
+            invitation_id:
+              access.invitationId,
             access_token:
-              access.access_token,
+              access.accessToken,
             form_version:
-              schema?.version ||
-              "1.0",
+              schema?.version || "1.0",
             answers,
           }),
         },
       );
 
       sessionStorage.removeItem(
-        "anamnesis_access",
+        "anamnesis_invitation_access",
       );
+
       sessionStorage.removeItem(
         "anamnesis_draft",
       );
@@ -443,15 +470,16 @@ export default function AnamnesisPage() {
           </h1>
 
           <p className="mt-4 leading-7 text-[#7e7062]">
-            A anamnese é liberada após a
-            confirmação do pagamento.
+            Solicite seu link individual
+            diretamente à terapeuta pelo
+            WhatsApp.
           </p>
 
           <Link
-            to="/pagamento"
+            to="/"
             className="mt-7 inline-flex rounded-full bg-[#373128] px-7 py-3.5 font-semibold text-white"
           >
-            Ir para o pagamento
+            Voltar ao início
           </Link>
         </section>
       </main>
@@ -493,9 +521,9 @@ export default function AnamnesisPage() {
           </h1>
 
           <p className="mt-4 leading-7 text-[#7e7062]">
-            Suas respostas foram recebidas com
-            sucesso. Uma cópia será enviada por
-            e-mail.
+            Suas respostas foram recebidas
+            com sucesso e estarão disponíveis
+            para a terapeuta.
           </p>
 
           <Link
@@ -509,18 +537,15 @@ export default function AnamnesisPage() {
     );
   }
 
-  const currentStep =
-    steps[stepIndex];
+  const currentStep = steps[stepIndex];
 
   const progress =
-    ((stepIndex + 1) /
-      steps.length) *
+    ((stepIndex + 1) / steps.length) *
     100;
 
-  const answeredCount =
-    Object.values(
-      answers.responses,
-    ).filter(hasAnswer).length;
+  const answeredCount = Object.values(
+    answers.responses,
+  ).filter(hasAnswer).length;
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_15%_15%,#fffefa_0%,#f2e8d7_52%,#e4e9df_100%)] px-4 py-7 text-[#393229]">
@@ -584,8 +609,7 @@ export default function AnamnesisPage() {
                   <div
                     key={field.id}
                     className={
-                      field.type ===
-                      "radio"
+                      field.type === "radio"
                         ? "md:col-span-2"
                         : ""
                     }
@@ -593,8 +617,7 @@ export default function AnamnesisPage() {
                     <QuestionField
                       field={field}
                       value={
-                        answers
-                          .identification[
+                        answers.identification[
                           field.id
                         ] || ""
                       }
@@ -653,16 +676,14 @@ export default function AnamnesisPage() {
 
                     <select
                       value={
-                        answers
-                          .feelings_map[
+                        answers.feelings_map[
                           feeling.id
                         ] || ""
                       }
                       onChange={(event) =>
                         updateFeeling(
                           feeling.id,
-                          event.target
-                            .value,
+                          event.target.value,
                         )
                       }
                       className="mt-2 w-full rounded-xl border border-white bg-white/70 px-4 py-3 outline-none"
@@ -699,8 +720,7 @@ export default function AnamnesisPage() {
                       (current) => ({
                         ...current,
                         additional_notes:
-                          event.target
-                            .value,
+                          event.target.value,
                       }),
                     )
                   }
@@ -802,9 +822,7 @@ export default function AnamnesisPage() {
           <div className="mt-12 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
-              disabled={
-                stepIndex === 0
-              }
+              disabled={stepIndex === 0}
               onClick={previousStep}
               className="inline-flex items-center justify-center gap-2 rounded-full border border-[#7d6c5b] px-7 py-3.5 disabled:opacity-30"
             >

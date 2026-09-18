@@ -307,8 +307,10 @@ export default function DashboardAnamnesisDetailPage() {
                 <span>Pagamento</span>
 
                 <strong>
-                  {formatCurrency(data.payment.value)}
-                </strong>
+  {data.payment
+    ? formatCurrency(data.payment.value)
+    : "Sem pagamento pelo site"}
+</strong>
               </div>
             </section>
 
