@@ -263,3 +263,7 @@ EMAIL_TIMEOUT = 20
 AXES_LOCKOUT_CALLABLE = (
     "dashboard.security.axes_lockout_response"
 )
+FRONTEND_URL = env(
+    "FRONTEND_URL",
+    default="http://localhost:5173",
+)

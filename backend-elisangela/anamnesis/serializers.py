@@ -14,7 +14,7 @@ def load_form_schema():
 
 
 class SubmitAnamnesisSerializer(serializers.Serializer):
-    payment_id = serializers.UUIDField()
+    invitation_id = serializers.UUIDField()
 
     access_token = serializers.CharField(
         min_length=32,
@@ -54,35 +54,43 @@ class SubmitAnamnesisSerializer(serializers.Serializer):
         self.validate_identification(
             value["identification"]
         )
+
         self.validate_responses(
             value["responses"]
         )
+
         self.validate_feelings(
             value["feelings_map"]
         )
+
         self.validate_consent(
             value["consent"]
         )
 
         return value
 
-    def validate_identification(self, identification):
+    def validate_identification(
+        self,
+        identification,
+    ):
         if not isinstance(identification, dict):
             raise serializers.ValidationError(
                 {
                     "identification": (
-                        "Os dados de identificação são inválidos."
+                        "Os dados de identificação "
+                        "são inválidos."
                     )
                 }
             )
 
         schema = load_form_schema()
+
         known_fields = {
             field["id"]
             for field in schema["identification"]
         }
-        received_fields = set(identification)
 
+        received_fields = set(identification)
         unknown_fields = received_fields - known_fields
 
         if unknown_fields:
@@ -90,7 +98,9 @@ class SubmitAnamnesisSerializer(serializers.Serializer):
                 {
                     "identification": (
                         "Campos desconhecidos: "
-                        + ", ".join(sorted(unknown_fields))
+                        + ", ".join(
+                            sorted(unknown_fields)
+                        )
                     )
                 }
             )
@@ -114,7 +124,9 @@ class SubmitAnamnesisSerializer(serializers.Serializer):
                 {
                     "identification": (
                         "Campos obrigatórios ausentes: "
-                        + ", ".join(sorted(empty_fields))
+                        + ", ".join(
+                            sorted(empty_fields)
+                        )
                     )
                 }
             )
@@ -124,40 +136,53 @@ class SubmitAnamnesisSerializer(serializers.Serializer):
             raise serializers.ValidationError(
                 {
                     "responses": (
-                        "As respostas das perguntas são inválidas."
+                        "As respostas das perguntas "
+                        "são inválidas."
                     )
                 }
             )
 
         schema = load_form_schema()
+
         questions = {
             question["id"]: question
             for question in schema["questions"]
         }
 
-        unknown_questions = set(responses) - set(questions)
+        unknown_questions = (
+            set(responses) - set(questions)
+        )
 
         if unknown_questions:
             raise serializers.ValidationError(
                 {
                     "responses": (
                         "Perguntas desconhecidas: "
-                        + ", ".join(sorted(unknown_questions))
+                        + ", ".join(
+                            sorted(unknown_questions)
+                        )
                     )
                 }
             )
 
         required_questions = {
             question_id
-            for question_id, question in questions.items()
+            for question_id, question
+            in questions.items()
             if question.get("required")
         }
 
-        unanswered = [
-            question_id
-            for question_id in required_questions
-            if not str(responses.get(question_id, "")).strip()
-        ]
+        unanswered = []
+
+        for question_id in required_questions:
+            answer = responses.get(question_id)
+
+            if (
+                answer is None
+                or answer == ""
+                or answer == []
+            ):
+                unanswered.append(question_id)
 
         if unanswered:
             raise serializers.ValidationError(
@@ -180,19 +205,25 @@ class SubmitAnamnesisSerializer(serializers.Serializer):
             )
 
         schema = load_form_schema()
+
         known_feelings = {
             feeling["id"]
-            for feeling in schema["feelings_map"]["feelings"]
+            for feeling
+            in schema["feelings_map"]["feelings"]
         }
 
-        unknown_feelings = set(feelings) - known_feelings
+        unknown_feelings = (
+            set(feelings) - known_feelings
+        )
 
         if unknown_feelings:
             raise serializers.ValidationError(
                 {
                     "feelings_map": (
                         "Sentimentos desconhecidos: "
-                        + ", ".join(sorted(unknown_feelings))
+                        + ", ".join(
+                            sorted(unknown_feelings)
+                        )
                     )
                 }
             )
@@ -203,7 +234,8 @@ class SubmitAnamnesisSerializer(serializers.Serializer):
 
         invalid_intensities = [
             feeling_id
-            for feeling_id, intensity in feelings.items()
+            for feeling_id, intensity
+            in feelings.items()
             if intensity not in allowed_intensities
         ]
 
@@ -212,7 +244,9 @@ class SubmitAnamnesisSerializer(serializers.Serializer):
                 {
                     "feelings_map": (
                         "Intensidade inválida em: "
-                        + ", ".join(sorted(invalid_intensities))
+                        + ", ".join(
+                            sorted(invalid_intensities)
+                        )
                     )
                 }
             )
@@ -220,10 +254,17 @@ class SubmitAnamnesisSerializer(serializers.Serializer):
     def validate_consent(self, consent):
         if not isinstance(consent, dict):
             raise serializers.ValidationError(
-                {"consent": "O consentimento é inválido."}
+                {
+                    "consent": (
+                        "O consentimento é inválido."
+                    )
+                }
             )
 
-        if consent.get("privacy_accepted") is not True:
+        if (
+            consent.get("privacy_accepted")
+            is not True
+        ):
             raise serializers.ValidationError(
                 {
                     "consent": (
@@ -233,7 +274,10 @@ class SubmitAnamnesisSerializer(serializers.Serializer):
                 }
             )
 
-        if consent.get("truthfulness_accepted") is not True:
+        if (
+            consent.get("truthfulness_accepted")
+            is not True
+        ):
             raise serializers.ValidationError(
                 {
                     "consent": (
@@ -253,25 +297,46 @@ class SubmitAnamnesisSerializer(serializers.Serializer):
             )
 
 
-class AnamnesisSerializer(serializers.ModelSerializer):
-    customer_name = serializers.CharField(
-        source="payment.customer.name",
-        read_only=True,
+class AnamnesisSerializer(
+    serializers.ModelSerializer
+):
+    customer_name = (
+        serializers.SerializerMethodField()
     )
-    customer_email = serializers.EmailField(
-        source="payment.customer.email",
-        read_only=True,
+
+    customer_email = (
+        serializers.SerializerMethodField()
     )
+
+    def get_customer_name(self, obj):
+        customer = obj.customer
+
+        if customer is None and obj.payment_id:
+            customer = obj.payment.customer
+
+        return customer.name if customer else ""
+
+    def get_customer_email(self, obj):
+        customer = obj.customer
+
+        if customer is None and obj.payment_id:
+            customer = obj.payment.customer
+
+        return customer.email if customer else ""
 
     class Meta:
         model = Anamnesis
+
         fields = (
             "id",
+            "customer",
             "payment",
+            "invitation",
             "customer_name",
             "customer_email",
             "form_version",
             "answers",
             "submitted_at",
         )
+
         read_only_fields = fields
