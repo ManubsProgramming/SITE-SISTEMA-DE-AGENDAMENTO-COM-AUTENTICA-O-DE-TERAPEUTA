@@ -1,19 +1,23 @@
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
+const whatsappMessage = encodeURIComponent(
+  "Olá, Elisângela! Gostaria de saber mais sobre o atendimento."
+);
+
 const whatsapp =
-  "https://wa.me/5592993578484?text=Olá,%20Elisângela!%20Gostaria%20de%20saber%20mais%20sobre%20o%20atendimento.";
+  `https://wa.me/5592993578484?text=${whatsappMessage}`;
 
 const steps = [
   {
     number: "01",
-    title: "Encontro",
-    text: "Após o pagamento, você recebe acesso ao formulário de anamnese para responder com calma.",
+    title: "Contato",
+    text: "Entre em contato pelo WhatsApp para conhecer o atendimento e consultar os horários disponíveis.",
   },
   {
     number: "02",
     title: "Anamnese",
-    text: "Um olhar cuidadoso sobre sua história, emoções e o que deseja transformar.",
+    text: "Após o primeiro contato, você receberá as orientações para responder à anamnese com calma.",
   },
   {
     number: "03",
@@ -36,27 +40,40 @@ export default function HomePage() {
               <strong className="block font-serif text-lg">
                 Elisângela Fernandes
               </strong>
+
               <span className="text-sm text-[#947b64]">
                 Terapeuta Emocional
               </span>
             </span>
           </Link>
 
-          <div className="hidden items-center gap-10 text-[#655b50] md:flex">
+          <div className="hidden items-center gap-10 text-[#655b50] lg:flex">
             <a href="#sobre">Sobre</a>
             <a href="#metodo">Método</a>
             <a href="#sessao">Sessão</a>
           </div>
 
-          <Link
-            to="/pagamento"
-            className="rounded-full bg-[#373128] px-5 py-3 font-medium text-white transition hover:-translate-y-0.5 hover:bg-[#211e19]"
-          >
-            <span className="hidden sm:inline">
-              Agendar sessão
-            </span>
-            <span className="sm:hidden">Agendar</span>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/acesso-terapeuta"
+              className="hidden rounded-full border border-[#373128]/20 px-4 py-3 text-sm font-medium text-[#655b50] transition hover:bg-white/60 sm:inline-flex"
+            >
+              Área da terapeuta
+            </Link>
+
+            <a
+              href={whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full bg-[#373128] px-5 py-3 font-medium text-white transition hover:-translate-y-0.5 hover:bg-[#211e19]"
+            >
+              <span className="hidden sm:inline">
+                Iniciar sessão
+              </span>
+
+              <span className="sm:hidden">Iniciar</span>
+            </a>
+          </div>
         </nav>
       </header>
 
@@ -87,13 +104,15 @@ export default function HomePage() {
             </p>
 
             <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <Link
-                to="/pagamento"
+              <a
+                href={whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-[#373128] px-7 py-4 font-semibold text-white shadow-lg transition hover:-translate-y-0.5"
               >
-                Reservar por R$ 150
-                <ArrowRight size={18} />
-              </Link>
+                <MessageCircle size={18} />
+                Iniciar sessão pelo WhatsApp
+              </a>
 
               <a
                 href="#metodo"
@@ -117,6 +136,7 @@ export default function HomePage() {
               <p className="font-serif text-2xl">
                 Cuidado individual
               </p>
+
               <p className="mt-1 text-sm text-[#887361]">
                 Um espaço para a sua história
               </p>
@@ -135,8 +155,8 @@ export default function HomePage() {
             </h2>
 
             <p className="self-end text-lg leading-8 text-[#837568]">
-              Um processo guiado, no seu ritmo, começando pela
-              anamnese.
+              Um processo guiado, no seu ritmo, começando pelo
+              primeiro contato.
             </p>
           </div>
 
@@ -174,15 +194,22 @@ export default function HomePage() {
 
               <p className="mt-7 font-serif text-6xl md:text-7xl">
                 R$ 150
+
                 <span className="ml-3 font-sans text-base text-[#8a7867]">
                   / sessão
                 </span>
               </p>
 
               <ul className="mt-9 space-y-4 text-lg text-[#776b5f]">
-                <li>✦ Anamnese liberada após o pagamento</li>
-                <li>✦ Atendimento individual e acolhedor</li>
-                <li>✦ Confidencialidade e respeito</li>
+                <li>
+                  ✦ Orientações enviadas após o primeiro contato
+                </li>
+                <li>
+                  ✦ Atendimento individual e acolhedor
+                </li>
+                <li>
+                  ✦ Confidencialidade e respeito
+                </li>
               </ul>
             </div>
 
@@ -192,17 +219,20 @@ export default function HomePage() {
               </h2>
 
               <p className="mt-4 text-lg leading-8 text-[#837568]">
-                Após a confirmação do Pix, o acesso à anamnese
-                será liberado automaticamente.
+                Converse diretamente com Elisângela para
+                conhecer o atendimento e consultar os horários
+                disponíveis.
               </p>
 
-              <Link
-                to="/pagamento"
+              <a
+                href={whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-9 inline-flex items-center justify-center gap-2 rounded-full bg-[#373128] px-7 py-4 font-semibold text-white"
               >
-                Pagar R$ 150 e liberar acesso
-                <ArrowRight size={18} />
-              </Link>
+                <MessageCircle size={18} />
+                Consultar horários pelo WhatsApp
+              </a>
             </div>
           </div>
         </section>
@@ -211,7 +241,7 @@ export default function HomePage() {
       <a
         href={whatsapp}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
         aria-label="Conversar pelo WhatsApp"
         className="fixed bottom-6 right-6 grid h-14 w-14 place-items-center rounded-full bg-[#373128] text-white shadow-xl transition hover:scale-105"
       >
@@ -219,8 +249,17 @@ export default function HomePage() {
       </a>
 
       <footer className="border-t border-white/70 px-5 py-8 text-center text-sm text-[#837568]">
-        © {new Date().getFullYear()} Elisângela Fernandes —
-        Terapeuta Emocional
+        <p>
+          © {new Date().getFullYear()} Elisângela Fernandes —
+          Terapeuta Emocional
+        </p>
+
+        <Link
+          to="/acesso-terapeuta"
+          className="mt-3 inline-block text-[#655b50] underline-offset-4 hover:underline"
+        >
+          Acesso exclusivo da terapeuta
+        </Link>
       </footer>
     </div>
   );
