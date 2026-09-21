@@ -1,16 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@500;600;700&display=swap");
 @import "tailwindcss";
 
-:root {
-  font-family: Inter, Arial, sans-serif;
-  color: #302a27;
-  background: #faf8f5;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-}
-
-* {
-  box-sizing: border-box;
-}
 
 html {
   scroll-behavior: smooth;
@@ -20,11 +10,5 @@ body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
+  background: #f8f3e9;
 }

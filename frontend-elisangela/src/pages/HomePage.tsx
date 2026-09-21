@@ -86,6 +86,67 @@ const questions = [
   },
 ];
 
+function Brand({
+  footer = false,
+}: {
+  footer?: boolean;
+}) {
+  return (
+    <a
+      href="#inicio"
+      aria-label="Elisângela Fernandes — início"
+      className="group flex items-center gap-3 md:gap-4"
+    >
+      <span
+        className={`relative grid shrink-0 place-items-center rounded-full bg-[#3c3429] text-[#f4dfbd] shadow-[0_10px_25px_rgba(54,44,34,0.22)] ${
+          footer
+            ? "h-14 w-14"
+            : "h-14 w-14 md:h-16 md:w-16"
+        }`}
+      >
+        <span
+          className="text-2xl font-bold"
+          style={{
+            fontFamily:
+              '"Cormorant Garamond", serif',
+          }}
+        >
+          EF
+        </span>
+
+        {!footer && (
+          <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-[#f8f3e9] bg-[#718069]" />
+        )}
+      </span>
+
+      <span className="min-w-0">
+        <strong
+          className={`block whitespace-nowrap font-normal leading-[0.85] text-[#3a3128] transition group-hover:text-[#65735e] ${
+            footer
+              ? "text-3xl"
+              : "text-[2rem] md:text-[2.6rem]"
+          }`}
+          style={{
+            fontFamily: '"Allura", cursive',
+          }}
+        >
+          Elisângela Fernandes
+        </strong>
+
+        <small
+          className="mt-2 block whitespace-nowrap text-[0.56rem] font-bold uppercase tracking-[0.25em] text-[#8d7158] md:text-[0.64rem]"
+          style={{
+            fontFamily:
+              '"Cormorant Garamond", serif',
+          }}
+        >
+          Terapeuta Emocional
+        </small>
+      </span>
+    </a>
+  );
+}
+
 export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] =
     useState(false);
@@ -100,27 +161,10 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#f8f3e9] text-[#332c24]">
       <header className="sticky top-0 z-50 border-b border-[#d8cab9]/70 bg-[#f8f3e9]/95 shadow-[0_10px_35px_rgba(65,50,35,0.08)] backdrop-blur-xl">
-        <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-4 lg:px-8">
-          <a
-            href="#inicio"
-            className="flex items-center gap-3"
-          >
-            <span className="grid h-12 w-12 place-items-center rounded-full bg-[#3c3429] font-serif text-lg text-[#f6e7c7] shadow-lg">
-              EF
-            </span>
+        <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-3 md:px-6 lg:px-8">
+          <Brand />
 
-            <span>
-              <strong className="block font-serif text-lg leading-tight md:text-xl">
-                Elisângela Fernandes
-              </strong>
-
-              <small className="text-[#92775f]">
-                Terapeuta Emocional
-              </small>
-            </span>
-          </a>
-
-          <div className="hidden items-center gap-8 font-semibold text-[#514536] lg:flex">
+          <div className="hidden items-center gap-7 font-semibold text-[#514536] lg:flex">
             <a
               href="#inicio"
               className="border-b-2 border-transparent py-2 transition hover:border-[#60735c] hover:text-[#60735c]"
@@ -164,22 +208,22 @@ export default function HomePage() {
             </a>
           </div>
 
-          <div className="hidden items-center gap-3 lg:flex">
-            <a
-              href={whatsapp}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full bg-[#6c7c65] px-6 py-3.5 font-bold text-white shadow-[0_12px_30px_rgba(77,98,72,0.23)] transition hover:-translate-y-0.5 hover:bg-[#53634e]"
-            >
-              <MessageCircle size={19} />
-              Iniciar sessão
-            </a>
-          </div>
+          <a
+            href={whatsapp}
+            target="_blank"
+            rel="noreferrer"
+            className="hidden items-center gap-2 rounded-full bg-[#6c7c65] px-6 py-3.5 font-bold text-white shadow-[0_12px_30px_rgba(77,98,72,0.23)] transition hover:-translate-y-0.5 hover:bg-[#53634e] lg:inline-flex"
+          >
+            <MessageCircle size={19} />
+            Iniciar sessão
+          </a>
 
           <button
             type="button"
             onClick={() =>
-              setMobileMenuOpen((current) => !current)
+              setMobileMenuOpen(
+                (current) => !current,
+              )
             }
             aria-label="Abrir menu"
             className="grid h-11 w-11 place-items-center rounded-full bg-[#3c3429] text-white lg:hidden"
@@ -272,7 +316,13 @@ export default function HomePage() {
                 Acolhimento emocional
               </p>
 
-              <h1 className="mt-8 max-w-3xl font-serif text-5xl leading-[1.03] tracking-[-0.035em] text-[#342d24] md:text-7xl lg:text-[5.4rem]">
+              <h1
+                className="mt-8 max-w-3xl text-5xl font-semibold leading-[1.03] tracking-[-0.035em] text-[#342d24] md:text-7xl lg:text-[5.4rem]"
+                style={{
+                  fontFamily:
+                    '"Cormorant Garamond", serif',
+                }}
+              >
                 Um espaço seguro para cuidar de{" "}
                 <span className="italic text-[#687960]">
                   você.
@@ -344,7 +394,13 @@ export default function HomePage() {
               />
 
               <div className="absolute -bottom-6 -left-3 max-w-[280px] rounded-[1.6rem] border border-white bg-[#fffdf8]/90 p-5 shadow-xl backdrop-blur-xl md:-left-10">
-                <p className="font-serif text-2xl">
+                <p
+                  className="text-2xl font-semibold"
+                  style={{
+                    fontFamily:
+                      '"Cormorant Garamond", serif',
+                  }}
+                >
                   Você não precisa enfrentar tudo
                   sozinha.
                 </p>
@@ -368,7 +424,13 @@ export default function HomePage() {
                 Sobre o atendimento
               </p>
 
-              <h2 className="mt-5 font-serif text-4xl leading-tight md:text-6xl">
+              <h2
+                className="mt-5 text-4xl font-semibold leading-tight md:text-6xl"
+                style={{
+                  fontFamily:
+                    '"Cormorant Garamond", serif',
+                }}
+              >
                 Cuidado, presença e respeito pela sua
                 história.
               </h2>
@@ -412,7 +474,13 @@ export default function HomePage() {
               Para o seu momento
             </p>
 
-            <h2 className="mt-5 font-serif text-4xl leading-tight md:text-6xl">
+            <h2
+              className="mt-5 text-4xl font-semibold leading-tight md:text-6xl"
+              style={{
+                fontFamily:
+                  '"Cormorant Garamond", serif',
+              }}
+            >
               Um acompanhamento que começa pela escuta.
             </h2>
 
@@ -435,7 +503,13 @@ export default function HomePage() {
                     <Icon size={25} />
                   </span>
 
-                  <h3 className="mt-7 font-serif text-3xl">
+                  <h3
+                    className="mt-7 text-3xl font-semibold"
+                    style={{
+                      fontFamily:
+                        '"Cormorant Garamond", serif',
+                    }}
+                  >
                     {benefit.title}
                   </h3>
 
@@ -453,7 +527,13 @@ export default function HomePage() {
                 O acompanhamento pode ajudar
               </p>
 
-              <h3 className="mt-5 font-serif text-4xl md:text-5xl">
+              <h3
+                className="mt-5 text-4xl font-semibold md:text-5xl"
+                style={{
+                  fontFamily:
+                    '"Cormorant Garamond", serif',
+                }}
+              >
                 Quando as emoções começam a pesar.
               </h3>
 
@@ -495,7 +575,13 @@ export default function HomePage() {
                   Como funciona
                 </p>
 
-                <h2 className="mt-5 max-w-3xl font-serif text-4xl leading-tight md:text-6xl">
+                <h2
+                  className="mt-5 max-w-3xl text-4xl font-semibold leading-tight md:text-6xl"
+                  style={{
+                    fontFamily:
+                      '"Cormorant Garamond", serif',
+                  }}
+                >
                   Seu atendimento começa com uma
                   conversa.
                 </h2>
@@ -514,11 +600,23 @@ export default function HomePage() {
                   key={step.number}
                   className="rounded-[2rem] border border-white/80 bg-white/55 p-7 shadow-[0_20px_50px_rgba(67,52,37,0.07)]"
                 >
-                  <span className="font-serif text-5xl text-[#899981]">
+                  <span
+                    className="text-5xl text-[#899981]"
+                    style={{
+                      fontFamily:
+                        '"Cormorant Garamond", serif',
+                    }}
+                  >
                     {step.number}
                   </span>
 
-                  <h3 className="mt-6 font-serif text-2xl">
+                  <h3
+                    className="mt-6 text-2xl font-semibold"
+                    style={{
+                      fontFamily:
+                        '"Cormorant Garamond", serif',
+                    }}
+                  >
                     {step.title}
                   </h3>
 
@@ -552,7 +650,13 @@ export default function HomePage() {
               Dúvidas frequentes
             </p>
 
-            <h2 className="mt-5 font-serif text-4xl leading-tight md:text-5xl">
+            <h2
+              className="mt-5 text-4xl font-semibold leading-tight md:text-5xl"
+              style={{
+                fontFamily:
+                  '"Cormorant Garamond", serif',
+              }}
+            >
               Informações para você se sentir mais
               segura.
             </h2>
@@ -578,7 +682,13 @@ export default function HomePage() {
                     }
                     className="flex w-full items-center justify-between gap-5 py-6 text-left"
                   >
-                    <span className="font-serif text-xl font-semibold md:text-2xl">
+                    <span
+                      className="text-xl font-semibold md:text-2xl"
+                      style={{
+                        fontFamily:
+                          '"Cormorant Garamond", serif',
+                      }}
+                    >
                       {question.title}
                     </span>
 
@@ -610,7 +720,13 @@ export default function HomePage() {
               Conteúdo e acolhimento
             </p>
 
-            <h2 className="mt-5 font-serif text-4xl md:text-6xl">
+            <h2
+              className="mt-5 text-4xl font-semibold md:text-6xl"
+              style={{
+                fontFamily:
+                  '"Cormorant Garamond", serif',
+              }}
+            >
               Em breve, novos conteúdos no blog.
             </h2>
 
@@ -628,7 +744,13 @@ export default function HomePage() {
               Seu cuidado pode começar agora
             </p>
 
-            <h2 className="mx-auto mt-6 max-w-4xl font-serif text-4xl leading-tight md:text-6xl">
+            <h2
+              className="mx-auto mt-6 max-w-4xl text-4xl font-semibold leading-tight md:text-6xl"
+              style={{
+                fontFamily:
+                  '"Cormorant Garamond", serif',
+              }}
+            >
               Vamos conversar sobre o que você está
               vivendo?
             </h2>
@@ -664,32 +786,24 @@ export default function HomePage() {
 
       <footer className="border-t border-[#d9ccbb] bg-[#eee4d6]">
         <div className="mx-auto grid max-w-[1400px] gap-10 px-6 py-12 md:grid-cols-3 lg:px-8">
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-full bg-[#3a3429] font-serif text-[#f4dfbd]">
-                EF
-              </span>
-
-              <div>
-                <strong className="font-serif text-lg">
-                  Elisângela Fernandes
-                </strong>
-
-                <p className="text-sm text-[#8d7560]">
-                  Terapeuta Emocional
-                </p>
-              </div>
-            </div>
-          </div>
+          <Brand footer />
 
           <div>
-            <strong className="font-serif text-xl">
+            <strong
+              className="text-xl font-semibold"
+              style={{
+                fontFamily:
+                  '"Cormorant Garamond", serif',
+              }}
+            >
               Navegação
             </strong>
 
             <div className="mt-4 grid gap-2 text-[#716153]">
               <a href="#sobre">Sobre</a>
-              <a href="#atendimento">Atendimento</a>
+              <a href="#atendimento">
+                Atendimento
+              </a>
               <a href="#como-funciona">
                 Como funciona
               </a>
@@ -699,7 +813,13 @@ export default function HomePage() {
           </div>
 
           <div>
-            <strong className="font-serif text-xl">
+            <strong
+              className="text-xl font-semibold"
+              style={{
+                fontFamily:
+                  '"Cormorant Garamond", serif',
+              }}
+            >
               Contato
             </strong>
 
