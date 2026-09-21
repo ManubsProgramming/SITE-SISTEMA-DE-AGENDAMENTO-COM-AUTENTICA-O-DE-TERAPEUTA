@@ -919,7 +919,147 @@
   font-weight: 600;
   cursor: pointer;
 }
+.dashboard-invitation-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 22px;
+  margin: 0 0 28px;
+  border: 1px solid #d5dfcf;
+  border-radius: 26px;
+  background: linear-gradient(
+    135deg,
+    #e3ebde 0%,
+    #f6f0e6 100%
+  );
+  padding: 28px 30px;
+  box-shadow: 0 20px 50px
+    rgba(58, 51, 41, 0.08);
+}
 
+.dashboard-invitation-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border-radius: 18px;
+  background: #66765f;
+  color: #ffffff;
+}
+
+.dashboard-invitation-content {
+  display: grid;
+  gap: 5px;
+}
+
+.dashboard-invitation-content p {
+  margin: 0;
+  color: #80674f;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.dashboard-invitation-content h2 {
+  margin: 0;
+  color: #352e26;
+  font-family: Georgia, serif;
+  font-size: 26px;
+}
+
+.dashboard-invitation-content span {
+  color: #76695c;
+  line-height: 1.6;
+}
+
+.generate-invitation-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 0;
+  border-radius: 999px;
+  background: #3a3329;
+  padding: 14px 22px;
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.generate-invitation-button:hover {
+  background: #65755e;
+}
+
+.generate-invitation-button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.dashboard-search-field {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #dfd3c4;
+  border-radius: 15px;
+  background: #ffffff;
+  padding: 0 16px;
+  color: #827263;
+  box-sizing: border-box;
+}
+
+.dashboard-search-field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 15px 0;
+  color: #3a3329;
+  font: inherit;
+  outline: none;
+}
+
+.dashboard-customers-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.dashboard-customer-card {
+  display: grid;
+  gap: 20px;
+  border: 1px solid #e5dacd;
+  border-radius: 22px;
+  background: #ffffff;
+  padding: 23px;
+  box-shadow: 0 16px 40px
+    rgba(57, 46, 34, 0.06);
+}
+
+@media (max-width: 900px) {
+  .dashboard-invitation-card {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .generate-invitation-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .dashboard-customers-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-invitation-card {
+    grid-template-columns: 1fr;
+    padding: 22px;
+  }
+}
 @media (max-width: 800px) {
   .blog-editor-grid,
   .blog-dashboard-grid {
