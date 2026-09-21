@@ -16,62 +16,50 @@ type AuthResponse = {
 export type DashboardSummary = {
   summary: {
     customers: number;
-    payments: number;
-    pending_payments: number;
-    paid_payments: number;
     anamneses: number;
-    received_total: string;
+    active_invitations: number;
   };
-  recent_payments: Array<{
+  recent_anamneses: Array<{
     id: string;
-    customer_name: string;
-    customer_email: string;
-    value: string;
-    status: string;
-    created_at: string;
-    paid_at: string | null;
+    customer: {
+      id: string;
+      name: string;
+      cpf: string;
+      email: string;
+      phone: string;
+    };
+    form_version: string;
+    submitted_at: string;
   }>;
-};
-
-export type DashboardPayment = {
-  id: string;
-  asaas_payment_id: string | null;
-  customer: {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-  };
-  value: string;
-  status: string;
-  created_at: string;
-  paid_at: string | null;
-  display_expires_at: string | null;
 };
 
 export type DashboardCustomer = {
   id: string;
   name: string;
+  cpf: string;
   email: string;
   phone: string;
-  payment_count: number;
   anamnesis_count: number;
   created_at: string;
-  last_payment_at: string | null;
 };
 
-export type DashboardAnamnesis = {
+export type CustomerAnamnesisItem = {
   id: string;
   payment_id: string | null;
   invitation_id: string | null;
   form_version: string;
   submitted_at: string;
-  customer: {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-  };
+};
+
+export type CustomerAnamneses = {
+  id: string;
+  name: string;
+  cpf: string;
+  email: string;
+  phone: string;
+  anamnesis_count: number;
+  last_submitted_at: string;
+  anamneses: CustomerAnamnesisItem[];
 };
 
 export type DashboardAnamnesisDetail = {
@@ -84,6 +72,7 @@ export type DashboardAnamnesisDetail = {
   customer: {
     id: string;
     name: string;
+    cpf: string;
     email: string;
     phone: string;
   };
@@ -94,12 +83,18 @@ export type DashboardAnamnesisDetail = {
   } | null;
 };
 
-export type AnamnesisInvitationResult = {
+export type AnamnesisInvitation = {
   invitation_id: string;
-  customer_id: string;
   expires_at: string;
   form_url: string;
 };
+
+/*
+ * Tipos antigos mantidos temporariamente para que
+ * DashboardPaymentsPage não quebre durante o build.
+ * A página de pagamentos será removida na próxima etapa.
+ */
+
 
 let csrfToken = "";
 
@@ -122,11 +117,7 @@ async function request<T>(
   const contentType =
     response.headers.get("content-type") ?? "";
 
-  if (
-    !contentType.includes(
-      "application/json",
-    )
-  ) {
+  if (!contentType.includes("application/json")) {
     throw new Error(
       `O servidor respondeu ${response.status} em ${response.url}.`,
     );
@@ -144,8 +135,7 @@ async function request<T>(
   return data as T;
 }
 
-export async function prepareCsrf():
-  Promise<string> {
+export async function prepareCsrf(): Promise<string> {
   const data = await request<{
     csrfToken: string;
   }>("/dashboard/csrf/");
@@ -178,8 +168,7 @@ export async function therapistLogin(
   );
 }
 
-export async function therapistLogout():
-  Promise<void> {
+export async function therapistLogout(): Promise<void> {
   if (!csrfToken) {
     await prepareCsrf();
   }
@@ -194,48 +183,16 @@ export async function therapistLogout():
   });
 }
 
-export async function getCurrentTherapist():
-  Promise<AuthResponse> {
+export async function getCurrentTherapist(): Promise<AuthResponse> {
   return request<AuthResponse>(
     "/dashboard/me/",
   );
 }
 
-export async function getDashboardSummary():
-  Promise<DashboardSummary> {
+export async function getDashboardSummary(): Promise<DashboardSummary> {
   return request<DashboardSummary>(
     "/dashboard/summary/",
   );
-}
-
-export async function getDashboardPayments(
-  search = "",
-  status = "",
-): Promise<DashboardPayment[]> {
-  const parameters = new URLSearchParams();
-
-  if (search.trim()) {
-    parameters.set(
-      "search",
-      search.trim(),
-    );
-  }
-
-  if (status) {
-    parameters.set("status", status);
-  }
-
-  const query = parameters.toString();
-
-  const path = query
-    ? `/dashboard/payments/?${query}`
-    : "/dashboard/payments/";
-
-  const data = await request<{
-    payments: DashboardPayment[];
-  }>(path);
-
-  return data.payments;
 }
 
 export async function getDashboardCustomers(
@@ -265,7 +222,7 @@ export async function getDashboardCustomers(
 
 export async function getDashboardAnamneses(
   search = "",
-): Promise<DashboardAnamnesis[]> {
+): Promise<CustomerAnamneses[]> {
   const parameters = new URLSearchParams();
 
   if (search.trim()) {
@@ -282,10 +239,10 @@ export async function getDashboardAnamneses(
     : "/dashboard/anamneses/";
 
   const data = await request<{
-    anamneses: DashboardAnamnesis[];
+    customers: CustomerAnamneses[];
   }>(path);
 
-  return data.anamneses;
+  return data.customers;
 }
 
 export async function getDashboardAnamnesisDetail(
@@ -296,27 +253,19 @@ export async function getDashboardAnamnesisDetail(
   );
 }
 
-export async function createAnamnesisInvitation(
-  name: string,
-  email: string,
-  phone: string,
-): Promise<AnamnesisInvitationResult> {
+export async function createAnamnesisInvitation(): Promise<AnamnesisInvitation> {
   if (!csrfToken) {
     await prepareCsrf();
   }
 
-  return request<AnamnesisInvitationResult>(
+  return request<AnamnesisInvitation>(
     "/dashboard/anamnesis-invitations/",
     {
       method: "POST",
       headers: {
         "X-CSRFToken": csrfToken,
       },
-      body: JSON.stringify({
-        name,
-        email,
-        phone,
-      }),
+      body: JSON.stringify({}),
     },
   );
 }
@@ -337,9 +286,7 @@ export async function downloadDashboardAnamnesisPdf(
       response.headers.get("content-type") ?? "";
 
     if (
-      contentType.includes(
-        "application/json",
-      )
+      contentType.includes("application/json")
     ) {
       const data = await response.json();
 
@@ -363,10 +310,9 @@ export async function downloadDashboardAnamnesisPdf(
       "content-disposition",
     ) ?? "";
 
-  const filenameMatch =
-    disposition.match(
-      /filename="?([^"]+)"?/,
-    );
+  const filenameMatch = disposition.match(
+    /filename="?([^"]+)"?/,
+  );
 
   const filename =
     filenameMatch?.[1] ??
@@ -384,3 +330,9 @@ export async function downloadDashboardAnamnesisPdf(
 
   URL.revokeObjectURL(downloadUrl);
 }
+
+/*
+ * Compatibilidade temporária com a página antiga.
+ * Essa função pode ser apagada quando removermos
+ * DashboardPaymentsPage das rotas.
+ */

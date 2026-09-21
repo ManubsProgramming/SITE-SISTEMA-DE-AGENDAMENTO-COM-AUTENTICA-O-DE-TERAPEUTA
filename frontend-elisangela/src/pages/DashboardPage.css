@@ -602,3 +602,168 @@
     grid-template-columns: 1fr;
   }
 }
+.anamnesis-customer-list {
+  display: grid;
+  gap: 14px;
+}
+
+.anamnesis-customer-card {
+  overflow: hidden;
+  border: 1px solid #e7ddd0;
+  border-radius: 22px;
+  background: #ffffff;
+}
+
+.anamnesis-customer-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border: 0;
+  background: transparent;
+  padding: 22px 24px;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.anamnesis-customer-header:hover {
+  background: #faf7f1;
+}
+
+.anamnesis-customer-main {
+  display: grid;
+  gap: 4px;
+}
+
+.anamnesis-customer-main strong {
+  color: #332c24;
+  font-size: 18px;
+}
+
+.anamnesis-customer-main span,
+.anamnesis-customer-main small {
+  color: #7f7061;
+}
+
+.anamnesis-customer-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.anamnesis-count {
+  border-radius: 999px;
+  background: #e5ecdf;
+  padding: 8px 13px;
+  color: #52624d;
+  white-space: nowrap;
+}
+
+.anamnesis-customer-details {
+  border-top: 1px solid #eee4d7;
+  padding: 20px 24px 24px;
+  background: #fcfaf6;
+}
+
+.customer-contact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 18px;
+}
+
+.customer-contact-row > div {
+  display: grid;
+  gap: 4px;
+}
+
+.customer-contact-row span {
+  color: #7f7061;
+}
+
+.customer-contact-row a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  background: #e1eadc;
+  padding: 10px 15px;
+  color: #496143;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.anamnesis-history {
+  display: grid;
+  gap: 10px;
+}
+
+.anamnesis-history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border: 1px solid #eadfd1;
+  border-radius: 16px;
+  background: white;
+  padding: 16px 18px;
+}
+
+.anamnesis-history-item > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.anamnesis-history-item span,
+.anamnesis-history-item small {
+  color: #817264;
+}
+
+.anamnesis-history-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.anamnesis-history-actions a,
+.anamnesis-history-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #b99c7b;
+  border-radius: 999px;
+  background: transparent;
+  padding: 9px 14px;
+  color: #59493b;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.anamnesis-history-actions button:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+@media (max-width: 700px) {
+  .anamnesis-customer-header,
+  .anamnesis-history-item,
+  .customer-contact-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .anamnesis-customer-summary {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .anamnesis-history-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+}

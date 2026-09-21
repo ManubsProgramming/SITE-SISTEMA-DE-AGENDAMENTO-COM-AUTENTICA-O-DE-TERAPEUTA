@@ -1,22 +1,25 @@
 import {
-  useCallback,
+  ChevronRight,
+  FileText,
+  Mail,
+  MessageCircle,
+  Search,
+} from "lucide-react";
+import {
   useEffect,
   useState,
 } from "react";
-import type { FormEvent } from "react";
 
 import {
-  createAnamnesisInvitation,
   getDashboardCustomers,
   therapistLogout,
 } from "../services/dashboardApi";
+
 import type {
-  AnamnesisInvitationResult,
   DashboardCustomer,
 } from "../services/dashboardApi";
 
 import "./DashboardPage.css";
-
 
 function formatDate(value: string) {
   return new Date(value).toLocaleDateString(
@@ -24,36 +27,32 @@ function formatDate(value: string) {
   );
 }
 
+function formatCpf(value: string) {
+  const cpf = value.replace(/\D/g, "");
 
-function normalizePhone(phone: string) {
-  const number = phone.replace(/\D/g, "");
+  if (cpf.length !== 11) {
+    return value || "Não informado";
+  }
 
-  return number.startsWith("55")
-    ? number
-    : `55${number}`;
+  return cpf.replace(
+    /(\d{3})(\d{3})(\d{3})(\d{2})/,
+    "$1.$2.$3-$4",
+  );
 }
-
 
 function whatsappUrl(phone: string) {
-  return `https://wa.me/${normalizePhone(phone)}`;
+  const number = phone.replace(/\D/g, "");
+
+  if (!number) {
+    return "";
+  }
+
+  const completeNumber = number.startsWith("55")
+    ? number
+    : `55${number}`;
+
+  return `https://wa.me/${completeNumber}`;
 }
-
-
-function invitationWhatsappUrl(
-  phone: string,
-  customerName: string,
-  formUrl: string,
-) {
-  const message = encodeURIComponent(
-    `Olá, ${customerName}! Segue o seu link individual para preencher a anamnese: ${formUrl}`,
-  );
-
-  return (
-    `https://wa.me/${normalizePhone(phone)}` +
-    `?text=${message}`
-  );
-}
-
 
 export default function DashboardCustomersPage() {
   const [customers, setCustomers] =
@@ -65,159 +64,41 @@ export default function DashboardCustomersPage() {
   const [loading, setLoading] =
     useState(true);
 
-  const [creating, setCreating] =
-    useState(false);
-
   const [error, setError] =
     useState("");
 
-  const [name, setName] =
-    useState("");
-
-  const [email, setEmail] =
-    useState("");
-
-  const [phone, setPhone] =
-    useState("");
-
-  const [generatedInvitation, setGeneratedInvitation] =
-    useState<{
-      customerName: string;
-      customerPhone: string;
-      invitation: AnamnesisInvitationResult;
-    } | null>(null);
-
-
-  const loadCustomers = useCallback(
-    async (currentSearch = "") => {
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
       setLoading(true);
       setError("");
 
-      try {
-        const result =
-          await getDashboardCustomers(
-            currentSearch,
-          );
+      getDashboardCustomers(search)
+        .then(setCustomers)
+        .catch((requestError) => {
+          const message =
+            requestError instanceof Error
+              ? requestError.message
+              : "Não foi possível carregar os clientes.";
 
-        setCustomers(result);
-      } catch (requestError) {
-        const message =
-          requestError instanceof Error
-            ? requestError.message
-            : "Não foi possível carregar os clientes.";
+          if (
+            message.includes("Autenticação")
+          ) {
+            window.location.href =
+              "/acesso-terapeuta";
 
-        if (
-          message.includes(
-            "Autenticação",
-          )
-        ) {
-          window.location.href =
-            "/acesso-terapeuta";
-          return;
-        }
+            return;
+          }
 
-        setError(message);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [],
-  );
-
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => {
-      loadCustomers(search);
+          setError(message);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }, 300);
 
-    return () => {
+    return () =>
       window.clearTimeout(timer);
-    };
-  }, [search, loadCustomers]);
-
-
-  async function generateInvitation(
-    customerName: string,
-    customerEmail: string,
-    customerPhone: string,
-  ) {
-    setCreating(true);
-    setError("");
-    setGeneratedInvitation(null);
-
-    try {
-      const invitation =
-        await createAnamnesisInvitation(
-          customerName,
-          customerEmail,
-          customerPhone,
-        );
-
-      setGeneratedInvitation({
-        customerName,
-        customerPhone,
-        invitation,
-      });
-
-      setName("");
-      setEmail("");
-      setPhone("");
-
-      await loadCustomers(search);
-    } catch (requestError) {
-      const message =
-        requestError instanceof Error
-          ? requestError.message
-          : "Não foi possível gerar o link.";
-
-      if (
-        message.includes(
-          "Autenticação",
-        )
-      ) {
-        window.location.href =
-          "/acesso-terapeuta";
-        return;
-      }
-
-      setError(message);
-    } finally {
-      setCreating(false);
-    }
-  }
-
-
-  async function handleCreate(
-    event: FormEvent<HTMLFormElement>,
-  ) {
-    event.preventDefault();
-
-    await generateInvitation(
-      name.trim(),
-      email.trim(),
-      phone.trim(),
-    );
-  }
-
-
-  async function copyInvitationLink() {
-    if (!generatedInvitation) {
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(
-        generatedInvitation
-          .invitation
-          .form_url,
-      );
-    } catch {
-      setError(
-        "Não foi possível copiar o link automaticamente.",
-      );
-    }
-  }
-
+  }, [search]);
 
   async function handleLogout() {
     try {
@@ -234,7 +115,6 @@ export default function DashboardCustomersPage() {
     }
   }
 
-
   return (
     <main className="dashboard">
       <aside className="dashboard-sidebar">
@@ -246,7 +126,10 @@ export default function DashboardCustomersPage() {
 
           <div>
             <strong>Elisângela</strong>
-            <small>Área da terapeuta</small>
+
+            <small>
+              Área da terapeuta
+            </small>
           </div>
         </a>
 
@@ -280,154 +163,32 @@ export default function DashboardCustomersPage() {
         <header className="dashboard-header">
           <div>
             <p>Atendimentos</p>
+
             <h1>Clientes</h1>
 
             <span>
-              Cadastre um cliente e gere
-              o link individual da anamnese.
+              Consulte os clientes
+              identificados pelo CPF.
             </span>
           </div>
         </header>
 
-        <section className="invitation-card">
-          <div className="section-heading">
-            <div>
-              <p>Novo atendimento</p>
-              <h2>Gerar link da anamnese</h2>
-            </div>
-          </div>
-
-          <form
-            className="invitation-form"
-            onSubmit={handleCreate}
-          >
-            <label>
-              Nome completo
-
-              <input
-                required
-                type="text"
-                value={name}
-                onChange={(event) =>
-                  setName(
-                    event.target.value,
-                  )
-                }
-                placeholder="Nome do cliente"
-              />
-            </label>
-
-            <label>
-              E-mail
-
-              <input
-                required
-                type="email"
-                value={email}
-                onChange={(event) =>
-                  setEmail(
-                    event.target.value,
-                  )
-                }
-                placeholder="cliente@email.com"
-              />
-            </label>
-
-            <label>
-              WhatsApp
-
-              <input
-                required
-                type="tel"
-                value={phone}
-                onChange={(event) =>
-                  setPhone(
-                    event.target.value,
-                  )
-                }
-                placeholder="(92) 99999-9999"
-              />
-            </label>
-
-            <button
-              disabled={creating}
-              type="submit"
-            >
-              {creating
-                ? "Gerando..."
-                : "Gerar link"}
-            </button>
-          </form>
-        </section>
-
-        {generatedInvitation && (
-          <section className="generated-invitation">
-            <div>
-              <strong>
-                Link criado para{" "}
-                {
-                  generatedInvitation
-                    .customerName
-                }
-              </strong>
-
-              <p>
-                O link é individual,
-                tem uso único e expira em
-                sete dias.
-              </p>
-
-              <input
-                readOnly
-                value={
-                  generatedInvitation
-                    .invitation
-                    .form_url
-                }
-              />
-            </div>
-
-            <div className="generated-actions">
-              <button
-                type="button"
-                onClick={
-                  copyInvitationLink
-                }
-              >
-                Copiar link
-              </button>
-
-              <a
-                href={invitationWhatsappUrl(
-                  generatedInvitation
-                    .customerPhone,
-                  generatedInvitation
-                    .customerName,
-                  generatedInvitation
-                    .invitation
-                    .form_url,
-                )}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Enviar pelo WhatsApp
-              </a>
-            </div>
-          </section>
-        )}
-
         <section className="dashboard-filters customers-filter">
-          <input
-            aria-label="Buscar cliente"
-            onChange={(event) =>
-              setSearch(
-                event.target.value,
-              )
-            }
-            placeholder="Buscar por nome, e-mail ou telefone"
-            type="search"
-            value={search}
-          />
+          <div className="dashboard-search-field">
+            <Search size={19} />
+
+            <input
+              aria-label="Buscar cliente"
+              onChange={(event) =>
+                setSearch(
+                  event.target.value,
+                )
+              }
+              placeholder="Buscar por nome, CPF, e-mail ou telefone"
+              type="search"
+              value={search}
+            />
+          </div>
         </section>
 
         {error && (
@@ -439,10 +200,11 @@ export default function DashboardCustomersPage() {
         <section className="recent-section">
           <div className="section-heading">
             <div>
-              <p>Cadastros</p>
+              <p>Prontuários</p>
 
               <h2>
-                {customers.length} cliente(s)
+                {customers.length}{" "}
+                cliente(s)
               </h2>
             </div>
           </div>
@@ -456,89 +218,117 @@ export default function DashboardCustomersPage() {
               Nenhum cliente encontrado.
             </div>
           ) : (
-            <div className="dashboard-table-wrapper">
-              <table className="dashboard-table">
-                <thead>
-                  <tr>
-                    <th>Cliente</th>
-                    <th>Telefone</th>
-                    <th>Anamneses</th>
-                    <th>Cadastro</th>
-                    <th>Ações</th>
-                  </tr>
-                </thead>
+            <div className="dashboard-customers-grid">
+              {customers.map(
+                (customer) => {
+                  const whatsapp =
+                    whatsappUrl(
+                      customer.phone,
+                    );
 
-                <tbody>
-                  {customers.map(
-                    (customer) => (
-                      <tr key={customer.id}>
-                        <td>
-                          <strong>
+                  return (
+                    <article
+                      className="dashboard-customer-card"
+                      key={customer.id}
+                    >
+                      <div className="customer-card-header">
+                        <span className="customer-avatar">
+                          {customer.name
+                            .charAt(0)
+                            .toUpperCase()}
+                        </span>
+
+                        <div>
+                          <h3>
                             {customer.name}
-                          </strong>
+                          </h3>
 
-                          <small>
+                          <p>
+                            CPF:{" "}
+                            {formatCpf(
+                              customer.cpf,
+                            )}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="customer-card-information">
+                        <a
+                          href={`mailto:${customer.email}`}
+                        >
+                          <Mail size={17} />
+
+                          <span>
                             {customer.email}
-                          </small>
-                        </td>
+                          </span>
+                        </a>
 
-                        <td>
-                          {customer.phone}
-                        </td>
+                        {whatsapp ? (
+                          <a
+                            href={whatsapp}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            <MessageCircle
+                              size={17}
+                            />
 
-                        <td>
-                          {
-                            customer
-                              .anamnesis_count
-                          }
-                        </td>
+                            <span>
+                              {customer.phone}
+                            </span>
+                          </a>
+                        ) : (
+                          <span>
+                            <MessageCircle
+                              size={17}
+                            />
+                            Telefone não informado
+                          </span>
+                        )}
+                      </div>
 
-                        <td>
+                      <div className="customer-card-footer">
+                        <div>
+                          <FileText
+                            size={18}
+                          />
+
+                          <span>
+                            {
+                              customer.anamnesis_count
+                            }{" "}
+                            {customer.anamnesis_count ===
+                            1
+                              ? "anamnese"
+                              : "anamneses"}
+                          </span>
+                        </div>
+
+                        <small>
+                          Desde{" "}
                           {formatDate(
                             customer.created_at,
                           )}
-                        </td>
+                        </small>
+                      </div>
 
-                        <td>
-                          <div className="customer-actions">
-                            <button
-                              type="button"
-                              disabled={creating}
-                              onClick={() =>
-                                generateInvitation(
-                                  customer.name,
-                                  customer.email,
-                                  customer.phone,
-                                )
-                              }
-                            >
-                              Gerar link
-                            </button>
+                      <a
+                        className="customer-anamneses-link"
+                        href={`/painel/anamneses?search=${encodeURIComponent(
+                          customer.cpf ||
+                            customer.email,
+                        )}`}
+                      >
+                        Ver anamneses
 
-                            <a
-                              href={whatsappUrl(
-                                customer.phone,
-                              )}
-                              target="_blank"
-                              rel="noreferrer"
-                            >
-                              WhatsApp
-                            </a>
-
-                            <a
-                              href={
-                                `mailto:${customer.email}`
-                              }
-                            >
-                              E-mail
-                            </a>
-                          </div>
-                        </td>
-                      </tr>
-                    ),
-                  )}
-                </tbody>
-              </table>
+                        <ChevronRight
+                          size={18}
+                        />
+                      </a>
+                    </article>
+                  );
+                },
+              )}
             </div>
           )}
         </section>

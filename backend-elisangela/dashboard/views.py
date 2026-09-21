@@ -5,8 +5,12 @@ import secrets
 from datetime import timedelta
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login, logout
-from django.db.models import Count, Max, Q, Sum
+from django.contrib.auth import (
+    authenticate,
+    login,
+    logout,
+)
+from django.db.models import Count, Q
 from django.http import HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404
@@ -45,7 +49,33 @@ def get_anamnesis_customer(anamnesis):
     if anamnesis.payment_id:
         return anamnesis.payment.customer
 
+    if (
+        anamnesis.invitation_id
+        and anamnesis.invitation.customer_id
+    ):
+        return anamnesis.invitation.customer
+
     return None
+
+
+def serialize_anamnesis(anamnesis):
+    return {
+        "id": str(anamnesis.id),
+        "payment_id": (
+            str(anamnesis.payment_id)
+            if anamnesis.payment_id
+            else None
+        ),
+        "invitation_id": (
+            str(anamnesis.invitation_id)
+            if anamnesis.invitation_id
+            else None
+        ),
+        "form_version": anamnesis.form_version,
+        "submitted_at": (
+            anamnesis.submitted_at.isoformat()
+        ),
+    }
 
 
 @require_GET
@@ -72,7 +102,11 @@ def therapist_login(request):
 
     if not username or not password:
         return JsonResponse(
-            {"detail": "Informe o usuário e a senha."},
+            {
+                "detail": (
+                    "Informe o usuário e a senha."
+                )
+            },
             status=400,
         )
 
@@ -151,127 +185,71 @@ def dashboard_summary(request):
             status=401,
         )
 
-    received_total = (
-        Payment.objects
-        .filter(status=Payment.Status.PAID)
-        .aggregate(total=Sum("value"))["total"]
-        or 0
+    customers_with_anamneses = (
+        Customer.objects
+        .filter(
+            Q(anamneses__isnull=False)
+            | Q(payments__anamnesis__isnull=False)
+        )
+        .distinct()
+        .count()
     )
 
-    recent_payments = (
-        Payment.objects
-        .select_related("customer")
-        .order_by("-created_at")[:5]
+    recent_anamneses = (
+        Anamnesis.objects
+        .select_related(
+            "customer",
+            "invitation",
+            "invitation__customer",
+            "payment",
+            "payment__customer",
+        )
+        .order_by("-submitted_at")[:5]
+    )
+
+    recent_results = []
+
+    for anamnesis in recent_anamneses:
+        customer = get_anamnesis_customer(
+            anamnesis
+        )
+
+        if customer is None:
+            continue
+
+        recent_results.append({
+            "id": str(anamnesis.id),
+            "customer": {
+                "id": str(customer.id),
+                "name": customer.name,
+                "cpf": customer.cpf or "",
+                "email": customer.email,
+                "phone": customer.phone,
+            },
+            "form_version": (
+                anamnesis.form_version
+            ),
+            "submitted_at": (
+                anamnesis.submitted_at.isoformat()
+            ),
+        })
+
+    active_invitations = (
+        AnamnesisInvitation.objects
+        .filter(
+            used_at__isnull=True,
+            expires_at__gt=timezone.now(),
+        )
+        .count()
     )
 
     return JsonResponse({
         "summary": {
-            "customers": Customer.objects.count(),
-            "payments": Payment.objects.count(),
-            "pending_payments": (
-                Payment.objects.filter(
-                    status=Payment.Status.PENDING,
-                ).count()
-            ),
-            "paid_payments": (
-                Payment.objects.filter(
-                    status=Payment.Status.PAID,
-                ).count()
-            ),
+            "customers": customers_with_anamneses,
             "anamneses": Anamnesis.objects.count(),
-            "received_total": str(received_total),
+            "active_invitations": active_invitations,
         },
-        "recent_payments": [
-            {
-                "id": str(payment.id),
-                "customer_name": payment.customer.name,
-                "customer_email": payment.customer.email,
-                "value": str(payment.value),
-                "status": payment.status,
-                "created_at": (
-                    payment.created_at.isoformat()
-                ),
-                "paid_at": (
-                    payment.paid_at.isoformat()
-                    if payment.paid_at
-                    else None
-                ),
-            }
-            for payment in recent_payments
-        ],
-    })
-
-
-@require_GET
-def dashboard_payments(request):
-    if not is_therapist(request):
-        return JsonResponse(
-            {"detail": "Autenticação necessária."},
-            status=401,
-        )
-
-    search = request.GET.get("search", "").strip()
-    payment_status = (
-        request.GET
-        .get("status", "")
-        .strip()
-        .upper()
-    )
-
-    payments = (
-        Payment.objects
-        .select_related("customer")
-        .order_by("-created_at")
-    )
-
-    if search:
-        payments = payments.filter(
-            customer__name__icontains=search,
-        )
-
-    valid_statuses = {
-        choice.value
-        for choice in Payment.Status
-    }
-
-    if payment_status in valid_statuses:
-        payments = payments.filter(
-            status=payment_status
-        )
-
-    payments = payments[:100]
-
-    return JsonResponse({
-        "payments": [
-            {
-                "id": str(payment.id),
-                "asaas_payment_id": (
-                    payment.asaas_payment_id
-                ),
-                "customer": {
-                    "id": str(payment.customer.id),
-                    "name": payment.customer.name,
-                    "email": payment.customer.email,
-                    "phone": payment.customer.phone,
-                },
-                "value": str(payment.value),
-                "status": payment.status,
-                "created_at": (
-                    payment.created_at.isoformat()
-                ),
-                "paid_at": (
-                    payment.paid_at.isoformat()
-                    if payment.paid_at
-                    else None
-                ),
-                "display_expires_at": (
-                    payment.display_expires_at.isoformat()
-                    if payment.display_expires_at
-                    else None
-                ),
-            }
-            for payment in payments
-        ],
+        "recent_anamneses": recent_results,
     })
 
 
@@ -288,54 +266,61 @@ def dashboard_customers(request):
     customers = (
         Customer.objects
         .annotate(
-            payment_count=Count(
-                "payments",
-                distinct=True,
-            ),
             anamnesis_count=Count(
                 "anamneses",
                 distinct=True,
             ),
-            last_payment_at=Max(
-                "payments__created_at"
-            ),
         )
-        .order_by("-created_at")
+        .filter(
+            Q(anamnesis_count__gt=0)
+            | Q(payments__anamnesis__isnull=False)
+        )
+        .distinct()
+        .order_by("name")
     )
 
     if search:
         customers = customers.filter(
             Q(name__icontains=search)
+            | Q(cpf__icontains=search)
             | Q(email__icontains=search)
             | Q(phone__icontains=search)
         )
 
-    customers = customers[:100]
+    results = []
+
+    for customer in customers[:100]:
+        direct_count = (
+            Anamnesis.objects
+            .filter(customer=customer)
+            .count()
+        )
+
+        legacy_count = (
+            Anamnesis.objects
+            .filter(
+                customer__isnull=True,
+                payment__customer=customer,
+            )
+            .count()
+        )
+
+        results.append({
+            "id": str(customer.id),
+            "name": customer.name,
+            "cpf": customer.cpf or "",
+            "email": customer.email,
+            "phone": customer.phone,
+            "anamnesis_count": (
+                direct_count + legacy_count
+            ),
+            "created_at": (
+                customer.created_at.isoformat()
+            ),
+        })
 
     return JsonResponse({
-        "customers": [
-            {
-                "id": str(customer.id),
-                "name": customer.name,
-                "email": customer.email,
-                "phone": customer.phone,
-                "payment_count": (
-                    customer.payment_count
-                ),
-                "anamnesis_count": (
-                    customer.anamnesis_count
-                ),
-                "created_at": (
-                    customer.created_at.isoformat()
-                ),
-                "last_payment_at": (
-                    customer.last_payment_at.isoformat()
-                    if customer.last_payment_at
-                    else None
-                ),
-            }
-            for customer in customers
-        ],
+        "customers": results,
     })
 
 
@@ -354,6 +339,7 @@ def dashboard_anamneses(request):
         .select_related(
             "customer",
             "invitation",
+            "invitation__customer",
             "payment",
             "payment__customer",
         )
@@ -363,51 +349,82 @@ def dashboard_anamneses(request):
     if search:
         anamneses = anamneses.filter(
             Q(customer__name__icontains=search)
+            | Q(customer__cpf__icontains=search)
             | Q(customer__email__icontains=search)
+            | Q(customer__phone__icontains=search)
             | Q(
                 payment__customer__name__icontains=search
             )
             | Q(
+                payment__customer__cpf__icontains=search
+            )
+            | Q(
                 payment__customer__email__icontains=search
             )
+            | Q(
+                payment__customer__phone__icontains=search
+            )
+            | Q(
+                invitation__customer__name__icontains=search
+            )
+            | Q(
+                invitation__customer__cpf__icontains=search
+            )
+            | Q(
+                invitation__customer__email__icontains=search
+            )
+        ).distinct()
+
+    grouped_customers = {}
+
+    for anamnesis in anamneses[:500]:
+        customer = get_anamnesis_customer(
+            anamnesis
         )
-
-    anamneses = anamneses[:100]
-
-    results = []
-
-    for anamnesis in anamneses:
-        customer = get_anamnesis_customer(anamnesis)
 
         if customer is None:
             continue
 
-        results.append({
-            "id": str(anamnesis.id),
-            "customer": {
+        # O CPF é a identificação principal.
+        # Para clientes antigos sem CPF, usamos o ID.
+        group_key = (
+            f"cpf:{customer.cpf}"
+            if customer.cpf
+            else f"id:{customer.id}"
+        )
+
+        if group_key not in grouped_customers:
+            grouped_customers[group_key] = {
                 "id": str(customer.id),
                 "name": customer.name,
+                "cpf": customer.cpf or "",
                 "email": customer.email,
                 "phone": customer.phone,
-            },
-            "payment_id": (
-                str(anamnesis.payment_id)
-                if anamnesis.payment_id
-                else None
-            ),
-            "invitation_id": (
-                str(anamnesis.invitation_id)
-                if anamnesis.invitation_id
-                else None
-            ),
-            "form_version": anamnesis.form_version,
-            "submitted_at": (
-                anamnesis.submitted_at.isoformat()
-            ),
-        })
+                "anamnesis_count": 0,
+                "last_submitted_at": (
+                    anamnesis.submitted_at.isoformat()
+                ),
+                "anamneses": [],
+            }
+
+        group = grouped_customers[group_key]
+
+        group["anamneses"].append(
+            serialize_anamnesis(anamnesis)
+        )
+        group["anamnesis_count"] += 1
+
+    results = list(grouped_customers.values())
+
+    results.sort(
+        key=lambda customer: (
+            customer["last_submitted_at"]
+        ),
+        reverse=True,
+    )
 
     return JsonResponse({
-        "anamneses": results,
+        "customers": results,
     })
 
 
@@ -426,6 +443,7 @@ def dashboard_anamnesis_detail(
         Anamnesis.objects.select_related(
             "customer",
             "invitation",
+            "invitation__customer",
             "payment",
             "payment__customer",
         ),
@@ -442,9 +460,12 @@ def dashboard_anamnesis_detail(
 
     payment_data = None
 
+    # Mantido apenas para visualizar registros antigos.
     if anamnesis.payment_id:
         payment_data = {
-            "value": str(anamnesis.payment.value),
+            "value": str(
+                anamnesis.payment.value
+            ),
             "status": anamnesis.payment.status,
             "paid_at": (
                 anamnesis.payment.paid_at.isoformat()
@@ -473,6 +494,7 @@ def dashboard_anamnesis_detail(
         "customer": {
             "id": str(customer.id),
             "name": customer.name,
+            "cpf": customer.cpf or "",
             "email": customer.email,
             "phone": customer.phone,
         },
@@ -495,6 +517,7 @@ def dashboard_anamnesis_pdf(
         Anamnesis.objects.select_related(
             "customer",
             "invitation",
+            "invitation__customer",
             "payment",
             "payment__customer",
         ),
@@ -509,7 +532,9 @@ def dashboard_anamnesis_pdf(
             status=404,
         )
 
-    pdf_content = generate_anamnesis_pdf(anamnesis)
+    pdf_content = generate_anamnesis_pdf(
+        anamnesis
+    )
 
     customer_name = (
         slugify(customer.name)
@@ -529,8 +554,12 @@ def dashboard_anamnesis_pdf(
     response["Content-Disposition"] = (
         f'attachment; filename="{filename}"'
     )
-    response["Cache-Control"] = "private, no-store"
-    response["X-Content-Type-Options"] = "nosniff"
+    response["Cache-Control"] = (
+        "private, no-store"
+    )
+    response["X-Content-Type-Options"] = (
+        "nosniff"
+    )
 
     return response
 
@@ -544,67 +573,27 @@ def create_anamnesis_invitation(request):
             status=401,
         )
 
-    try:
-        data = json.loads(request.body or "{}")
-    except json.JSONDecodeError:
-        return JsonResponse(
-            {"detail": "Dados inválidos."},
-            status=400,
-        )
-
-    name = data.get("name", "").strip()
-    email = data.get("email", "").strip().lower()
-    phone = data.get("phone", "").strip()
-
-    if not name or not email or not phone:
-        return JsonResponse(
-            {
-                "detail": (
-                    "Informe nome, e-mail e telefone."
-                )
-            },
-            status=400,
-        )
-
-    customer = Customer.objects.filter(
-        email__iexact=email
-    ).first()
-
-    if customer is None:
-        customer = Customer.objects.create(
-            name=name,
-            email=email,
-            phone=phone,
-        )
-    else:
-        customer.name = name
-        customer.phone = phone
-
-        customer.save(
-            update_fields=[
-                "name",
-                "phone",
-                "updated_at",
-            ]
-        )
-
     raw_token = secrets.token_urlsafe(32)
 
     token_hash = hashlib.sha256(
         raw_token.encode("utf-8")
     ).hexdigest()
 
-    invitation = AnamnesisInvitation.objects.create(
-        customer=customer,
-        token_hash=token_hash,
-        expires_at=(
-            timezone.now()
-            + timedelta(days=7)
-        ),
-        created_by=request.user,
+    invitation = (
+        AnamnesisInvitation.objects.create(
+            customer=None,
+            token_hash=token_hash,
+            expires_at=(
+                timezone.now()
+                + timedelta(days=7)
+            ),
+            created_by=request.user,
+        )
     )
 
-    frontend_url = settings.FRONTEND_URL.rstrip("/")
+    frontend_url = (
+        settings.FRONTEND_URL.rstrip("/")
+    )
 
     form_url = (
         f"{frontend_url}/anamnese"
@@ -614,8 +603,9 @@ def create_anamnesis_invitation(request):
 
     return JsonResponse(
         {
-            "invitation_id": str(invitation.id),
-            "customer_id": str(customer.id),
+            "invitation_id": str(
+                invitation.id
+            ),
             "expires_at": (
                 invitation.expires_at.isoformat()
             ),
@@ -623,3 +613,19 @@ def create_anamnesis_invitation(request):
         },
         status=201,
     )
+
+
+# Rota antiga preservada temporariamente para não
+# quebrar imports existentes. Ela não será exibida
+# no novo painel.
+@require_GET
+def dashboard_payments(request):
+    if not is_therapist(request):
+        return JsonResponse(
+            {"detail": "Autenticação necessária."},
+            status=401,
+        )
+
+    return JsonResponse({
+        "payments": [],
+    })

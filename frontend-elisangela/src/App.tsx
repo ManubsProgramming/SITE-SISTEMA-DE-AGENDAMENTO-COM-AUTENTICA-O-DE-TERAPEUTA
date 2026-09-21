@@ -7,7 +7,6 @@ import {
 import AnamnesisPage from "./pages/AnamnesisPage";
 import DashboardCustomersPage from "./pages/DashboardCustomersPage";
 import DashboardPage from "./pages/DashboardPage";
-import DashboardPaymentsPage from "./pages/DashboardPaymentsPage";
 import HomePage from "./pages/HomePage";
 import PaymentPage from "./pages/PaymentPage";
 import TherapistLoginPage from "./pages/TherapistLoginPage";
@@ -48,10 +47,6 @@ function App() {
           element={<DashboardCustomersPage />}
         />
 
-        <Route
-          path="/painel/pagamentos"
-          element={<DashboardPaymentsPage />}
-        />
         <Route
           path="/painel/anamneses"
           element={<DashboardAnamnesesPage />}
