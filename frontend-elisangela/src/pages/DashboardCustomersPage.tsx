@@ -148,6 +148,9 @@ export default function DashboardCustomersPage() {
           <a href="/painel/anamneses">
             Anamneses
           </a>
+          <a href="/painel/blog">
+  Blog
+</a>
         </nav>
 
         <button
