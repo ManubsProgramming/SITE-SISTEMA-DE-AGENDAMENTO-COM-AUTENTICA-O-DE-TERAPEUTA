@@ -570,3 +570,35 @@
     grid-template-columns: 1fr;
   }
 }
+.dashboard-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.dashboard-shortcuts a {
+  display: grid;
+  gap: 12px;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dashboard-shortcuts a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 55px rgba(65, 51, 40, 0.12);
+}
+
+.dashboard-shortcuts small {
+  color: #857567;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+  .dashboard-shortcuts {
+    grid-template-columns: 1fr;
+  }
+}
