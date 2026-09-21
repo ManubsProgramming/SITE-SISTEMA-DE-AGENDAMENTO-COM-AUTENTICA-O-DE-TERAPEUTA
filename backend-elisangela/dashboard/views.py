@@ -1,34 +1,21 @@
 import hashlib
+import hmac
 import json
 import secrets
-
 from datetime import timedelta
 
 from django.conf import settings
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout,
-)
-from django.db.models import Count, Q
+from django.contrib.auth import authenticate, login, logout
+from django.db.models import Exists, OuterRef, Q
 from django.http import HttpResponse, JsonResponse
 from django.middleware.csrf import get_token
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.text import slugify
-from django.views.decorators.csrf import (
-    csrf_protect,
-    ensure_csrf_cookie,
-)
-from django.views.decorators.http import (
-    require_GET,
-    require_POST,
-)
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
+from django.views.decorators.http import require_GET, require_POST
 
-from anamnesis.models import (
-    Anamnesis,
-    AnamnesisInvitation,
-)
+from anamnesis.models import Anamnesis, AnamnesisInvitation
 from anamnesis.pdf import generate_anamnesis_pdf
 from customers.models import Customer
 from payments.models import Payment
@@ -72,10 +59,23 @@ def serialize_anamnesis(anamnesis):
             else None
         ),
         "form_version": anamnesis.form_version,
-        "submitted_at": (
-            anamnesis.submitted_at.isoformat()
-        ),
+        "submitted_at": anamnesis.submitted_at.isoformat(),
     }
+
+
+def customer_anamneses_query(customer):
+    return Anamnesis.objects.filter(
+        Q(customer=customer)
+        | Q(
+            customer__isnull=True,
+            payment__customer=customer,
+        )
+        | Q(
+            customer__isnull=True,
+            payment__isnull=True,
+            invitation__customer=customer,
+        )
+    )
 
 
 @require_GET
@@ -102,11 +102,7 @@ def therapist_login(request):
 
     if not username or not password:
         return JsonResponse(
-            {
-                "detail": (
-                    "Informe o usuário e a senha."
-                )
-            },
+            {"detail": "Informe o usuário e a senha."},
             status=400,
         )
 
@@ -116,11 +112,7 @@ def therapist_login(request):
         password=password,
     )
 
-    if (
-        user is None
-        or not user.is_active
-        or not user.is_staff
-    ):
+    if user is None or not user.is_active or not user.is_staff:
         return JsonResponse(
             {"detail": "Usuário ou senha inválidos."},
             status=401,
@@ -132,10 +124,7 @@ def therapist_login(request):
         "authenticated": True,
         "user": {
             "username": user.username,
-            "name": (
-                user.get_full_name()
-                or user.username
-            ),
+            "name": user.get_full_name() or user.username,
             "email": user.email,
         },
     })
@@ -145,10 +134,7 @@ def therapist_login(request):
 @csrf_protect
 def therapist_logout(request):
     logout(request)
-
-    return JsonResponse({
-        "authenticated": False,
-    })
+    return JsonResponse({"authenticated": False})
 
 
 @require_GET
@@ -168,10 +154,7 @@ def current_therapist(request):
         "authenticated": True,
         "user": {
             "username": user.username,
-            "name": (
-                user.get_full_name()
-                or user.username
-            ),
+            "name": user.get_full_name() or user.username,
             "email": user.email,
         },
     })
@@ -185,13 +168,23 @@ def dashboard_summary(request):
             status=401,
         )
 
+    related_anamneses = Anamnesis.objects.filter(
+        Q(customer_id=OuterRef("pk"))
+        | Q(
+            customer__isnull=True,
+            payment__customer_id=OuterRef("pk"),
+        )
+        | Q(
+            customer__isnull=True,
+            payment__isnull=True,
+            invitation__customer_id=OuterRef("pk"),
+        )
+    )
+
     customers_with_anamneses = (
         Customer.objects
-        .filter(
-            Q(anamneses__isnull=False)
-            | Q(payments__anamnesis__isnull=False)
-        )
-        .distinct()
+        .annotate(has_anamnesis=Exists(related_anamneses))
+        .filter(has_anamnesis=True)
         .count()
     )
 
@@ -210,9 +203,7 @@ def dashboard_summary(request):
     recent_results = []
 
     for anamnesis in recent_anamneses:
-        customer = get_anamnesis_customer(
-            anamnesis
-        )
+        customer = get_anamnesis_customer(anamnesis)
 
         if customer is None:
             continue
@@ -226,12 +217,8 @@ def dashboard_summary(request):
                 "email": customer.email,
                 "phone": customer.phone,
             },
-            "form_version": (
-                anamnesis.form_version
-            ),
-            "submitted_at": (
-                anamnesis.submitted_at.isoformat()
-            ),
+            "form_version": anamnesis.form_version,
+            "submitted_at": anamnesis.submitted_at.isoformat(),
         })
 
     active_invitations = (
@@ -263,20 +250,24 @@ def dashboard_customers(request):
 
     search = request.GET.get("search", "").strip()
 
+    related_anamneses = Anamnesis.objects.filter(
+        Q(customer_id=OuterRef("pk"))
+        | Q(
+            customer__isnull=True,
+            payment__customer_id=OuterRef("pk"),
+        )
+        | Q(
+            customer__isnull=True,
+            payment__isnull=True,
+            invitation__customer_id=OuterRef("pk"),
+        )
+    )
+
     customers = (
         Customer.objects
-        .annotate(
-            anamnesis_count=Count(
-                "anamneses",
-                distinct=True,
-            ),
-        )
-        .filter(
-            Q(anamnesis_count__gt=0)
-            | Q(payments__anamnesis__isnull=False)
-        )
-        .distinct()
-        .order_by("name")
+        .annotate(has_anamnesis=Exists(related_anamneses))
+        .filter(has_anamnesis=True)
+        .order_by("name", "id")
     )
 
     if search:
@@ -290,38 +281,19 @@ def dashboard_customers(request):
     results = []
 
     for customer in customers[:100]:
-        direct_count = (
-            Anamnesis.objects
-            .filter(customer=customer)
-            .count()
-        )
-
-        legacy_count = (
-            Anamnesis.objects
-            .filter(
-                customer__isnull=True,
-                payment__customer=customer,
-            )
-            .count()
-        )
-
         results.append({
             "id": str(customer.id),
             "name": customer.name,
             "cpf": customer.cpf or "",
             "email": customer.email,
             "phone": customer.phone,
-            "anamnesis_count": (
-                direct_count + legacy_count
-            ),
-            "created_at": (
-                customer.created_at.isoformat()
-            ),
+            "anamnesis_count": customer_anamneses_query(
+                customer
+            ).count(),
+            "created_at": customer.created_at.isoformat(),
         })
 
-    return JsonResponse({
-        "customers": results,
-    })
+    return JsonResponse({"customers": results})
 
 
 @require_GET
@@ -352,41 +324,23 @@ def dashboard_anamneses(request):
             | Q(customer__cpf__icontains=search)
             | Q(customer__email__icontains=search)
             | Q(customer__phone__icontains=search)
-            | Q(
-                payment__customer__name__icontains=search
-            )
-            | Q(
-                payment__customer__cpf__icontains=search
-            )
-            | Q(
-                payment__customer__email__icontains=search
-            )
-            | Q(
-                payment__customer__phone__icontains=search
-            )
-            | Q(
-                invitation__customer__name__icontains=search
-            )
-            | Q(
-                invitation__customer__cpf__icontains=search
-            )
-            | Q(
-                invitation__customer__email__icontains=search
-            )
+            | Q(payment__customer__name__icontains=search)
+            | Q(payment__customer__cpf__icontains=search)
+            | Q(payment__customer__email__icontains=search)
+            | Q(payment__customer__phone__icontains=search)
+            | Q(invitation__customer__name__icontains=search)
+            | Q(invitation__customer__cpf__icontains=search)
+            | Q(invitation__customer__email__icontains=search)
         ).distinct()
 
     grouped_customers = {}
 
     for anamnesis in anamneses[:500]:
-        customer = get_anamnesis_customer(
-            anamnesis
-        )
+        customer = get_anamnesis_customer(anamnesis)
 
         if customer is None:
             continue
 
-        # O CPF é a identificação principal.
-        # Para clientes antigos sem CPF, usamos o ID.
         group_key = (
             f"cpf:{customer.cpf}"
             if customer.cpf
@@ -408,31 +362,20 @@ def dashboard_anamneses(request):
             }
 
         group = grouped_customers[group_key]
-
-        group["anamneses"].append(
-            serialize_anamnesis(anamnesis)
-        )
+        group["anamneses"].append(serialize_anamnesis(anamnesis))
         group["anamnesis_count"] += 1
 
     results = list(grouped_customers.values())
-
     results.sort(
-        key=lambda customer: (
-            customer["last_submitted_at"]
-        ),
+        key=lambda customer: customer["last_submitted_at"],
         reverse=True,
     )
 
-    return JsonResponse({
-        "customers": results,
-    })
+    return JsonResponse({"customers": results})
 
 
 @require_GET
-def dashboard_anamnesis_detail(
-    request,
-    anamnesis_id,
-):
+def dashboard_anamnesis_detail(request, anamnesis_id):
     if not is_therapist(request):
         return JsonResponse(
             {"detail": "Autenticação necessária."},
@@ -460,12 +403,9 @@ def dashboard_anamnesis_detail(
 
     payment_data = None
 
-    # Mantido apenas para visualizar registros antigos.
     if anamnesis.payment_id:
         payment_data = {
-            "value": str(
-                anamnesis.payment.value
-            ),
+            "value": str(anamnesis.payment.value),
             "status": anamnesis.payment.status,
             "paid_at": (
                 anamnesis.payment.paid_at.isoformat()
@@ -487,9 +427,7 @@ def dashboard_anamnesis_detail(
             else None
         ),
         "form_version": anamnesis.form_version,
-        "submitted_at": (
-            anamnesis.submitted_at.isoformat()
-        ),
+        "submitted_at": anamnesis.submitted_at.isoformat(),
         "answers": anamnesis.answers,
         "customer": {
             "id": str(customer.id),
@@ -503,10 +441,7 @@ def dashboard_anamnesis_detail(
 
 
 @require_GET
-def dashboard_anamnesis_pdf(
-    request,
-    anamnesis_id,
-):
+def dashboard_anamnesis_pdf(request, anamnesis_id):
     if not is_therapist(request):
         return JsonResponse(
             {"detail": "Autenticação necessária."},
@@ -532,34 +467,19 @@ def dashboard_anamnesis_pdf(
             status=404,
         )
 
-    pdf_content = generate_anamnesis_pdf(
-        anamnesis
-    )
-
-    customer_name = (
-        slugify(customer.name)
-        or "cliente"
-    )
-
-    filename = (
-        f"anamnese-{customer_name}-"
-        f"{anamnesis.id}.pdf"
-    )
+    pdf_content = generate_anamnesis_pdf(anamnesis)
+    customer_name = slugify(customer.name) or "cliente"
+    filename = f"anamnese-{customer_name}-{anamnesis.id}.pdf"
 
     response = HttpResponse(
         pdf_content,
         content_type="application/pdf",
     )
-
     response["Content-Disposition"] = (
         f'attachment; filename="{filename}"'
     )
-    response["Cache-Control"] = (
-        "private, no-store"
-    )
-    response["X-Content-Type-Options"] = (
-        "nosniff"
-    )
+    response["Cache-Control"] = "private, no-store"
+    response["X-Content-Type-Options"] = "nosniff"
 
     return response
 
@@ -574,27 +494,18 @@ def create_anamnesis_invitation(request):
         )
 
     raw_token = secrets.token_urlsafe(32)
-
     token_hash = hashlib.sha256(
         raw_token.encode("utf-8")
     ).hexdigest()
 
-    invitation = (
-        AnamnesisInvitation.objects.create(
-            customer=None,
-            token_hash=token_hash,
-            expires_at=(
-                timezone.now()
-                + timedelta(days=7)
-            ),
-            created_by=request.user,
-        )
+    invitation = AnamnesisInvitation.objects.create(
+        customer=None,
+        token_hash=token_hash,
+        expires_at=timezone.now() + timedelta(days=7),
+        created_by=request.user,
     )
 
-    frontend_url = (
-        settings.FRONTEND_URL.rstrip("/")
-    )
-
+    frontend_url = settings.FRONTEND_URL.rstrip("/")
     form_url = (
         f"{frontend_url}/anamnese"
         f"?invitation_id={invitation.id}"
@@ -603,21 +514,14 @@ def create_anamnesis_invitation(request):
 
     return JsonResponse(
         {
-            "invitation_id": str(
-                invitation.id
-            ),
-            "expires_at": (
-                invitation.expires_at.isoformat()
-            ),
+            "invitation_id": str(invitation.id),
+            "expires_at": invitation.expires_at.isoformat(),
             "form_url": form_url,
         },
         status=201,
     )
 
 
-# Rota antiga preservada temporariamente para não
-# quebrar imports existentes. Ela não será exibida
-# no novo painel.
 @require_GET
 def dashboard_payments(request):
     if not is_therapist(request):
@@ -626,6 +530,4 @@ def dashboard_payments(request):
             status=401,
         )
 
-    return JsonResponse({
-        "payments": [],
-    })
+    return JsonResponse({"payments": []})
