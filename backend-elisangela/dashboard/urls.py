@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    create_anamnesis_invitation,
     csrf_token,
     current_therapist,
     dashboard_anamneses,
@@ -49,6 +50,11 @@ urlpatterns = [
         "payments/",
         dashboard_payments,
         name="dashboard-payments",
+    ),
+    path(
+        "anamnesis-invitations/",
+        create_anamnesis_invitation,
+        name="create-anamnesis-invitation",
     ),
     path(
         "anamneses/",
