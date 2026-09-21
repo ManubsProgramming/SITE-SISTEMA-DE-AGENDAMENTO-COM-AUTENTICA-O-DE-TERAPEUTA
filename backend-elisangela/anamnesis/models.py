@@ -13,10 +13,11 @@ class AnamnesisInvitation(models.Model):
 
     customer = models.ForeignKey(
         "customers.Customer",
-        on_delete=models.PROTECT,
-        related_name="anamnesis_invitations",
-        verbose_name="cliente",
-    )
+            on_delete=models.PROTECT,
+    related_name="anamnesis_invitations",
+    null=True,
+    blank=True,
+)
 
     token_hash = models.CharField(
         "hash do token",

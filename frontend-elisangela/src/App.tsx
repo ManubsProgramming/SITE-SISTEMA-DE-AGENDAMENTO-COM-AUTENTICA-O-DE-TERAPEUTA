@@ -12,6 +12,9 @@ import PaymentPage from "./pages/PaymentPage";
 import TherapistLoginPage from "./pages/TherapistLoginPage";
 import DashboardAnamnesesPage from "./pages/DashboardAnamnesesPage";
 import DashboardAnamnesisDetailPage from "./pages/DashboardAnamnesisDetailPage";
+import BlogPage from "./pages/BlogPage";
+import BlogPostPage from "./pages/BlogPostPage";
+import DashboardBlogPage from "./pages/DashboardBlogPage";
 
 function App() {
   return (
@@ -55,6 +58,20 @@ function App() {
           path="/painel/anamneses/:anamnesisId"
           element={<DashboardAnamnesisDetailPage />}
         />
+        <Route
+  path="/blog"
+  element={<BlogPage />}
+/>
+
+<Route
+  path="/blog/:slug"
+  element={<BlogPostPage />}
+/>
+
+<Route
+  path="/painel/blog"
+  element={<DashboardBlogPage />}
+/>
       </Routes>
     </BrowserRouter>
   );

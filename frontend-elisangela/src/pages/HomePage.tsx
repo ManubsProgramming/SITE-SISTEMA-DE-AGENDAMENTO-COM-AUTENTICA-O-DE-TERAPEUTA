@@ -724,34 +724,39 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+<section
+  id="blog"
+  className="bg-[#dfe7d9]"
+>
+  <div className="mx-auto max-w-[1400px] px-6 py-24 text-center lg:px-8">
+    <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#63715d]">
+      Conteúdo e informação
+    </p>
 
-        <section
-          id="blog"
-          className="bg-[#dfe7d9]"
-        >
-          <div className="mx-auto max-w-[1400px] px-6 py-24 text-center lg:px-8">
-            <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#63715d]">
-              Conteúdo e informação
-            </p>
+    <h2
+      className="mt-5 text-4xl font-semibold md:text-6xl"
+      style={{
+        fontFamily:
+          '"Cormorant Garamond", serif',
+      }}
+    >
+      Conheça o blog da Elisângela
+    </h2>
 
-            <h2
-              className="mt-5 text-4xl font-semibold md:text-6xl"
-              style={{
-                fontFamily:
-                  '"Cormorant Garamond", serif',
-              }}
-            >
-              Em breve, novos conteúdos no blog.
-            </h2>
+    <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#63705e]">
+      Conteúdos sobre terapia emocional,
+      transformação e cuidado individual.
+    </p>
 
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#63705e]">
-              Um espaço para conteúdos escritos pela
-              Elisângela sobre sua abordagem terapêutica
-              e cuidado emocional.
-            </p>
-          </div>
-        </section>
-
+    <Link
+      to="/blog"
+      className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#3a3329] px-8 py-4 font-bold text-white"
+    >
+      Ver publicações
+      <ArrowRight size={18} />
+    </Link>
+  </div>
+</section>
         <section className="bg-[#f8f3e9] px-5 py-20">
           <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-[3rem] bg-[#3a3329] px-7 py-16 text-center text-white shadow-[0_30px_80px_rgba(55,43,31,0.22)] md:px-14">
             <div className="absolute -left-16 -top-16 h-52 w-52 rounded-full bg-[#718069]/30 blur-2xl" />
@@ -825,8 +830,9 @@ export default function HomePage() {
                 Atendimento
               </a>
               <a href="#duvidas">Dúvidas</a>
-              <a href="#blog">Blog</a>
-            </div>
+<Link to="/blog">
+  Blog
+</Link>            </div>
           </div>
 
           <div>
