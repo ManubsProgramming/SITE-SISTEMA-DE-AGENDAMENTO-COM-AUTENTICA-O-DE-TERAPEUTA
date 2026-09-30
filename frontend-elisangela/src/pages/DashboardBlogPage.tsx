@@ -191,7 +191,7 @@ export default function DashboardBlogPage() {
           <a href="/painel/anamneses">
             Anamneses
           </a>
-
+         
           <a
             className="active"
             href="/painel/blog"

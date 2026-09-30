@@ -38,31 +38,37 @@ const benefits = [
 ];
 
 const specialties = [
-  "Ansiedade e pensamentos acelerados",
-  "Sobrecarga emocional",
-  "Baixa autoestima e insegurança",
-  "Dificuldades nos relacionamentos",
-  "Medos e bloqueios emocionais",
-  "Padrões emocionais que se repetem",
+  "Ansiedade ",
+  "Depressão",
+  "Estresse",
+  "Abandono",
+  "Dependência Emocional ",
+  "Baixa autoestima ",
+  "Medos e Fobias  ",
+  "Perdas e luto ",
 ];
 
 const questions = [
   {
-    title: "O atendimento é online?",
+    title: "Como funciona a terapia online?",
     text: "Sim. O atendimento é realizado online, permitindo que você participe de onde estiver, em um ambiente reservado e confortável.",
   },
   {
-    title: "Como faço para iniciar?",
+    title: "Como funciona a primeira sessão?",
     text: "Clique no botão do WhatsApp para conversar diretamente com a Elisângela e receber as orientações necessárias.",
   },
   {
-    title: "Qual é o valor do atendimento?",
+    title: "Qual a frequência das sessões?",
     text: "Os valores e as condições são informados diretamente pelo WhatsApp, de forma individual.",
   },
   {
-    title: "O atendimento é sigiloso?",
+    title: "Qual o valor da sessão e qual a forma de pagamento?",
     text: "Sim. As informações compartilhadas durante o atendimento são tratadas com cuidado, privacidade e confidencialidade.",
   },
+  {
+    title: "Aceita plano de saúde ou convênio?",
+    text:""
+  }
 ];
 
 function Brand({
@@ -346,7 +352,7 @@ export default function HomePage() {
               <div className="absolute -inset-3 -rotate-2 rounded-[3rem] border border-[#c9b391]/30 bg-white/5" />
 
               <img
-                src="/elisangela.png"
+                src="/elisangela.jpeg"
                 alt="Elisângela Fernandes, terapeuta emocional"
                 className="relative aspect-[4/5] w-full rounded-[2.7rem] object-cover object-top shadow-[0_35px_80px_rgba(0,0,0,0.32)]"
               />
@@ -398,8 +404,7 @@ export default function HomePage() {
                     '"Cormorant Garamond", serif',
                 }}
               >
-                Uma abordagem direcionada à
-                transformação emocional.
+                Uma abordagem focada em resultados breves.
               </h2>
             </div>
 
@@ -410,16 +415,17 @@ export default function HomePage() {
               />
 
               <p className="mt-6 text-lg leading-9 text-[#716253]">
-                O atendimento é realizado online e possui
-                uma abordagem focada em resultados,
-                respeitando a história, as necessidades e
-                os objetivos de cada pessoa.
+              O atendimento é realizado de forma online com prévio agendamento.
               </p>
 
               <p className="mt-6 text-lg leading-9 text-[#716253]">
-                Este espaço será atualizado com a
-                apresentação completa do método e dos
-                princípios utilizados pela Elisângela.
+               Abordagem TRG: É uma Terapia de Reprocessamento Generativo, uma abordagem terapêutica breve que visa encontrar e reprocessar a raiz de traumas, dores emocionais e problemas psicossomáticos.
+
+              </p>
+              <p className="mt-6 text-lg leading-9 text-[#716253]">
+               Foco em resultados: É uma metodologia com começo, meio e fim, estruturada para resolver questões emocionais 
+               em um número reduzido de sessões.
+
               </p>
 
               <a
@@ -531,7 +537,7 @@ export default function HomePage() {
 
               <div className="bg-[#6c7c65] p-9 text-white md:p-14">
                 <p className="mb-7 text-sm font-bold uppercase tracking-[0.22em] text-[#e0eadb]">
-                  O atendimento pode auxiliar em
+                   Como posso ajudar:
                 </p>
 
                 <ul className="grid gap-5">

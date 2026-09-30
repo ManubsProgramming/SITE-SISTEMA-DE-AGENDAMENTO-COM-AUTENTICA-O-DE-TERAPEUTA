@@ -529,5 +529,3 @@ def dashboard_payments(request):
             {"detail": "Autenticação necessária."},
             status=401,
         )
-
-    return JsonResponse({"payments": []})
