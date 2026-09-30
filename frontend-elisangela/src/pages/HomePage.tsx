@@ -59,7 +59,7 @@ const questions = [
   },
   {
     title: "Qual a frequência das sessões?",
-    text: "Depende da disponibilidade do cliente,mas o ideal é que seja semanal, para que o processo terapêutico seja mais eficaz.",
+    text: "Depende da disponibilidade do cliente, mas o ideal é que seja semanal, para que o processo terapêutico seja mais eficaz.",
   },
   {
     title: "Qual o valor da sessão e qual a forma de pagamento?",
