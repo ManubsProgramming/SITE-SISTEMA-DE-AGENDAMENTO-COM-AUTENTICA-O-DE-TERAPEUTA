@@ -1,3 +1,7 @@
+import os
+
+from django.core.files.storage import default_storage
+from django.conf import settings
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -158,4 +162,62 @@ def dashboard_post_detail(request, post_id):
         DashboardBlogPostSerializer(
             updated_post
         ).data
+    )
+@api_view(["POST"])
+@permission_classes([IsAdminUser])
+def upload_blog_image(request):
+    image = request.FILES.get("image")
+
+    if not image:
+        return Response(
+            {"detail": "Nenhuma imagem foi enviada."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    allowed_types = {
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+    }
+
+    if image.content_type not in allowed_types:
+        return Response(
+            {
+                "detail":
+                "Formato inválido. Use JPG, PNG ou WEBP."
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    max_size = 5 * 1024 * 1024
+
+    if image.size > max_size:
+        return Response(
+            {
+                "detail":
+                "A imagem deve ter no máximo 5 MB."
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    extension = os.path.splitext(image.name)[1].lower()
+
+    filename = (
+        f"blog/capas/"
+        f"{os.urandom(16).hex()}{extension}"
+    )
+
+    saved_path = default_storage.save(
+        filename,
+        image,
+    )
+
+    url = default_storage.url(saved_path)
+
+    if not url.startswith("http"):
+        url = request.build_absolute_uri(url)
+
+    return Response(
+        {"url": url},
+        status=status.HTTP_201_CREATED,
     )

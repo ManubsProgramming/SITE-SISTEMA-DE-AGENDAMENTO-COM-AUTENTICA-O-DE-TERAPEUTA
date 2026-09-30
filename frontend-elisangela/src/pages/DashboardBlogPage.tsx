@@ -4,9 +4,11 @@ import {
   Trash2,
   X,
 } from "lucide-react";
+
 import {
   useEffect,
   useState,
+  type ChangeEvent,
 } from "react";
 
 import {
@@ -14,6 +16,7 @@ import {
   deleteBlogPost,
   getDashboardBlogPosts,
   updateBlogPost,
+  uploadBlogCoverImage,
 } from "../services/blogApi";
 
 import type {
@@ -52,6 +55,9 @@ export default function DashboardBlogPage() {
   const [saving, setSaving] =
     useState(false);
 
+  const [uploadingImage, setUploadingImage] =
+    useState(false);
+
   const [error, setError] =
     useState("");
 
@@ -65,11 +71,12 @@ export default function DashboardBlogPage() {
             : "Não foi possível carregar o blog.";
 
         if (
-          message.includes("Autenticação")
-          || message.includes("403")
+          message.includes("Autenticação") ||
+          message.includes("403")
         ) {
           window.location.href =
             "/acesso-terapeuta";
+
           return;
         }
 
@@ -83,7 +90,9 @@ export default function DashboardBlogPage() {
 
   function startCreate() {
     setEditingId(null);
-    setForm(emptyForm);
+    setForm({
+      ...emptyForm,
+    });
     setEditorOpen(true);
     setError("");
   }
@@ -106,7 +115,109 @@ export default function DashboardBlogPage() {
     setError("");
   }
 
+  async function handleImageUpload(
+    event: ChangeEvent<HTMLInputElement>,
+  ) {
+    const file =
+      event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setError("");
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      setError(
+        "Formato inválido. Escolha uma imagem JPG, PNG ou WEBP.",
+      );
+
+      event.target.value = "";
+      return;
+    }
+
+    const maxSize =
+      5 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+      setError(
+        "A imagem deve ter no máximo 5 MB.",
+      );
+
+      event.target.value = "";
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      const result =
+        await uploadBlogCoverImage(file);
+
+      setForm((currentForm) => ({
+        ...currentForm,
+        cover_image_url:
+          result.url,
+      }));
+    } catch (requestError) {
+      setError(
+        requestError instanceof Error
+          ? requestError.message
+          : "Não foi possível enviar a imagem.",
+      );
+    } finally {
+      setUploadingImage(false);
+
+      event.target.value = "";
+    }
+  }
+
+  function removeCoverImage() {
+    setForm((currentForm) => ({
+      ...currentForm,
+      cover_image_url: "",
+    }));
+  }
+
   async function savePost() {
+    if (!form.title.trim()) {
+      setError(
+        "Informe o título da publicação.",
+      );
+
+      return;
+    }
+
+    if (!form.category.trim()) {
+      setError(
+        "Informe a categoria da publicação.",
+      );
+
+      return;
+    }
+
+    if (!form.excerpt.trim()) {
+      setError(
+        "Informe o resumo da publicação.",
+      );
+
+      return;
+    }
+
+    if (!form.content.trim()) {
+      setError(
+        "Informe o conteúdo da publicação.",
+      );
+
+      return;
+    }
+
     setSaving(true);
     setError("");
 
@@ -122,7 +233,10 @@ export default function DashboardBlogPage() {
 
       setEditorOpen(false);
       setEditingId(null);
-      setForm(emptyForm);
+      setForm({
+        ...emptyForm,
+      });
+
       loadPosts();
     } catch (requestError) {
       setError(
@@ -135,17 +249,23 @@ export default function DashboardBlogPage() {
     }
   }
 
-  async function removePost(post: BlogPost) {
-    const confirmed = window.confirm(
-      `Excluir a publicação "${post.title}"?`,
-    );
+  async function removePost(
+    post: BlogPost,
+  ) {
+    const confirmed =
+      window.confirm(
+        `Excluir a publicação "${post.title}"?`,
+      );
 
     if (!confirmed) {
       return;
     }
 
+    setError("");
+
     try {
       await deleteBlogPost(post.id);
+
       loadPosts();
     } catch (requestError) {
       setError(
@@ -158,6 +278,7 @@ export default function DashboardBlogPage() {
 
   async function handleLogout() {
     await therapistLogout();
+
     window.location.href =
       "/acesso-terapeuta";
   }
@@ -172,7 +293,10 @@ export default function DashboardBlogPage() {
           <span>EF</span>
 
           <div>
-            <strong>Elisângela</strong>
+            <strong>
+              Elisângela
+            </strong>
+
             <small>
               Área da terapeuta
             </small>
@@ -191,7 +315,7 @@ export default function DashboardBlogPage() {
           <a href="/painel/anamneses">
             Anamneses
           </a>
-         
+
           <a
             className="active"
             href="/painel/blog"
@@ -212,8 +336,13 @@ export default function DashboardBlogPage() {
       <section className="dashboard-content">
         <header className="dashboard-header">
           <div>
-            <p>Conteúdo do site</p>
-            <h1>Blog</h1>
+            <p>
+              Conteúdo do site
+            </p>
+
+            <h1>
+              Blog
+            </h1>
 
             <span>
               Crie e edite publicações.
@@ -240,7 +369,9 @@ export default function DashboardBlogPage() {
           <section className="blog-editor">
             <div className="blog-editor-header">
               <div>
-                <p>Editor</p>
+                <p>
+                  Editor
+                </p>
 
                 <h2>
                   {editingId === null
@@ -251,9 +382,10 @@ export default function DashboardBlogPage() {
 
               <button
                 type="button"
-                onClick={() =>
-                  setEditorOpen(false)
-                }
+                onClick={() => {
+                  setEditorOpen(false);
+                  setError("");
+                }}
                 aria-label="Fechar editor"
               >
                 <X size={21} />
@@ -267,12 +399,15 @@ export default function DashboardBlogPage() {
                 <input
                   value={form.title}
                   onChange={(event) =>
-                    setForm({
-                      ...form,
-                      title:
-                        event.target.value,
-                    })
+                    setForm(
+                      (currentForm) => ({
+                        ...currentForm,
+                        title:
+                          event.target.value,
+                      }),
+                    )
                   }
+                  placeholder="Digite o título da publicação"
                 />
               </label>
 
@@ -282,11 +417,13 @@ export default function DashboardBlogPage() {
                 <input
                   value={form.category}
                   onChange={(event) =>
-                    setForm({
-                      ...form,
-                      category:
-                        event.target.value,
-                    })
+                    setForm(
+                      (currentForm) => ({
+                        ...currentForm,
+                        category:
+                          event.target.value,
+                      }),
+                    )
                   }
                   placeholder="Ex.: Ansiedade"
                 />
@@ -299,33 +436,84 @@ export default function DashboardBlogPage() {
                   rows={3}
                   value={form.excerpt}
                   onChange={(event) =>
-                    setForm({
-                      ...form,
-                      excerpt:
-                        event.target.value,
-                    })
+                    setForm(
+                      (currentForm) => ({
+                        ...currentForm,
+                        excerpt:
+                          event.target.value,
+                      }),
+                    )
                   }
+                  placeholder="Escreva um breve resumo da publicação..."
                 />
               </label>
 
-              <label className="blog-full-field">
-                URL da imagem de capa
+              <div className="blog-full-field">
+                <span className="blog-field-label">
+                  Imagem de capa
+                </span>
 
-                <input
-                  type="url"
-                  value={
-                    form.cover_image_url
-                  }
-                  onChange={(event) =>
-                    setForm({
-                      ...form,
-                      cover_image_url:
-                        event.target.value,
-                    })
-                  }
-                  placeholder="https://..."
-                />
-              </label>
+                <div className="blog-image-upload-box">
+                  {form.cover_image_url ? (
+                    <div className="blog-image-preview">
+                      <img
+                        src={
+                          form.cover_image_url
+                        }
+                        alt="Imagem de capa da publicação"
+                      />
+
+                      <button
+                        type="button"
+                        onClick={
+                          removeCoverImage
+                        }
+                      >
+                        <Trash2
+                          size={16}
+                        />
+
+                        Remover imagem
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="blog-image-picker">
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        onChange={
+                          handleImageUpload
+                        }
+                        disabled={
+                          uploadingImage
+                        }
+                      />
+
+                      {uploadingImage ? (
+                        <>
+                          <span>
+                            Enviando imagem...
+                          </span>
+
+                          <small>
+                            Aguarde um momento
+                          </small>
+                        </>
+                      ) : (
+                        <>
+                          <span>
+                            Escolher imagem
+                          </span>
+
+                          <small>
+                            JPG, PNG ou WEBP · máximo 5 MB
+                          </small>
+                        </>
+                      )}
+                    </label>
+                  )}
+                </div>
+              </div>
 
               <label className="blog-full-field">
                 Conteúdo
@@ -334,12 +522,15 @@ export default function DashboardBlogPage() {
                   rows={14}
                   value={form.content}
                   onChange={(event) =>
-                    setForm({
-                      ...form,
-                      content:
-                        event.target.value,
-                    })
+                    setForm(
+                      (currentForm) => ({
+                        ...currentForm,
+                        content:
+                          event.target.value,
+                      }),
+                    )
                   }
+                  placeholder="Escreva o conteúdo da publicação..."
                 />
               </label>
 
@@ -349,12 +540,14 @@ export default function DashboardBlogPage() {
                 <select
                   value={form.status}
                   onChange={(event) =>
-                    setForm({
-                      ...form,
-                      status:
-                        event.target
-                          .value as BlogPostInput["status"],
-                    })
+                    setForm(
+                      (currentForm) => ({
+                        ...currentForm,
+                        status:
+                          event.target
+                            .value as BlogPostInput["status"],
+                      }),
+                    )
                   }
                 >
                   <option value="DRAFT">
@@ -370,7 +563,10 @@ export default function DashboardBlogPage() {
 
             <button
               type="button"
-              disabled={saving}
+              disabled={
+                saving ||
+                uploadingImage
+              }
               onClick={savePost}
               className="blog-save-button"
             >
@@ -384,7 +580,9 @@ export default function DashboardBlogPage() {
         <section className="recent-section">
           <div className="section-heading">
             <div>
-              <p>Publicações</p>
+              <p>
+                Publicações
+              </p>
 
               <h2>
                 {posts.length} post(s)
@@ -429,8 +627,13 @@ export default function DashboardBlogPage() {
                         : "Rascunho"}
                     </span>
 
-                    <h3>{post.title}</h3>
-                    <p>{post.excerpt}</p>
+                    <h3>
+                      {post.title}
+                    </h3>
+
+                    <p>
+                      {post.excerpt}
+                    </p>
 
                     <div className="blog-card-actions">
                       <button
@@ -439,17 +642,25 @@ export default function DashboardBlogPage() {
                           startEdit(post)
                         }
                       >
-                        <Edit3 size={16} />
+                        <Edit3
+                          size={16}
+                        />
+
                         Editar
                       </button>
 
                       <button
                         type="button"
                         onClick={() =>
-                          removePost(post)
+                          removePost(
+                            post,
+                          )
                         }
                       >
-                        <Trash2 size={16} />
+                        <Trash2
+                          size={16}
+                        />
+
                         Excluir
                       </button>
                     </div>

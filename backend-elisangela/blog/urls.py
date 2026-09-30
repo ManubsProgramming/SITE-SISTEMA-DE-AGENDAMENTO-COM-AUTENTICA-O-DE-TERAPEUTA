@@ -5,6 +5,7 @@ from .views import (
     dashboard_posts,
     public_post_detail,
     public_posts,
+    upload_blog_image,
 )
 
 
@@ -29,4 +30,9 @@ urlpatterns = [
         dashboard_post_detail,
         name="dashboard-blog-post-detail",
     ),
+    path(
+    "blog/dashboard/upload-image/",
+    upload_blog_image,
+    name="upload_blog_image",
+),
 ]

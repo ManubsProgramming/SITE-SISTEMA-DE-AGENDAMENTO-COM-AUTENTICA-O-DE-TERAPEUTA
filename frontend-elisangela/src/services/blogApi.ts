@@ -167,3 +167,45 @@ export async function deleteBlogPost(
     );
   }
 }
+export async function uploadBlogCoverImage(
+  file: File,
+): Promise<{ url: string }> {
+  const csrfToken = await getCsrfToken();
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const response = await fetch(
+    `${API_URL}/blog/dashboard/upload-image/`,
+    {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "X-CSRFToken": csrfToken,
+      },
+      body: formData,
+    },
+  );
+
+  const contentType =
+    response.headers.get("content-type") ?? "";
+
+  if (!contentType.includes("application/json")) {
+    throw new Error(
+      `O servidor respondeu ${response.status}.`,
+    );
+  }
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const detail =
+      typeof data.detail === "string"
+        ? data.detail
+        : "Não foi possível enviar a imagem.";
+
+    throw new Error(detail);
+  }
+
+  return data;
+}
