@@ -20,7 +20,7 @@ class BlogPost(models.Model):
     )
     excerpt = models.TextField(
         "resumo",
-        max_length=500,
+        max_length=10000000,
     )
     content = models.TextField(
         "conteúdo",
