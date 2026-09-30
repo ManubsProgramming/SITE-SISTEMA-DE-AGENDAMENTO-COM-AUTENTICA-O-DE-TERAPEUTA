@@ -31,7 +31,7 @@ urlpatterns = [
         name="dashboard-blog-post-detail",
     ),
     path(
-    "blog/dashboard/upload-image/",
+    "dashboard/upload-image/",
     upload_blog_image,
     name="upload_blog_image",
 ),
