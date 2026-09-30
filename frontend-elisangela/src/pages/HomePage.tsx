@@ -38,36 +38,40 @@ const benefits = [
 ];
 
 const specialties = [
-  "Ansiedade ",
+  "Ansiedade",
   "Depressão",
   "Estresse",
   "Abandono",
-  "Dependência Emocional ",
-  "Baixa autoestima ",
-  "Medos e Fobias  ",
-  "Perdas e luto ",
+  "Dependência Emocional",
+  "Baixa autoestima",
+  "Medos e Fobias",
+  "Perdas e luto",
 ];
 
 const questions = [
   {
     title: "Como funciona a terapia online?",
-    text: "Sim. O atendimento é realizado online, permitindo que você participe de onde estiver, em um ambiente reservado e confortável.",
+    text: " O atendimento é realizado online, permitindo que você participe de onde estiver, em um ambiente reservado e confortável.",
   },
   {
     title: "Como funciona a primeira sessão?",
-    text: "Clique no botão do WhatsApp para conversar diretamente com a Elisângela e receber as orientações necessárias.",
+    text: "É enviado um formulário de anamnese e após o recebimento do formulário, a primeira sessão é agendada.",
   },
   {
     title: "Qual a frequência das sessões?",
-    text: "Os valores e as condições são informados diretamente pelo WhatsApp, de forma individual.",
+    text: "Depende da disponibilidade do cliente,mas o ideal é que seja semanal, para que o processo terapêutico seja mais eficaz.",
   },
   {
     title: "Qual o valor da sessão e qual a forma de pagamento?",
-    text: "Sim. As informações compartilhadas durante o atendimento são tratadas com cuidado, privacidade e confidencialidade.",
+    text: "O valor da sessão é informado após o contato via WhatsApp e o pagamento é realizado via PIX, transferência bancária ou cartão de crédito.",
   },
   {
     title: "Aceita plano de saúde ou convênio?",
-    text:""
+    text: "Não, a terapia é oferecida como serviço privado. ",
+  },
+  {
+    title:"O que é conversado nas sessões é sigiloso?",
+    text:" Sim, todas as informações compartilhadas durante as sessões são confidenciais e protegidas por sigilo profissional.",
   }
 ];
 
@@ -92,8 +96,7 @@ function Brand({
         <span
           className="text-xl font-bold sm:text-2xl"
           style={{
-            fontFamily:
-              '"Cormorant Garamond", serif',
+            fontFamily: '"Cormorant Garamond", serif',
           }}
         >
           EF
@@ -108,8 +111,7 @@ function Brand({
               : "text-lg sm:text-2xl md:text-[2rem]"
           }`}
           style={{
-            fontFamily:
-              '"Cormorant Garamond", serif',
+            fontFamily: '"Cormorant Garamond", serif',
           }}
         >
           Elisângela Fernandes
@@ -136,11 +138,15 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#f8f3e9] text-[#332c24]">
+
+      {/* HEADER */}
       <header className="sticky top-0 z-50 border-b border-[#d8cab9]/70 bg-[#f8f3e9]/95 shadow-[0_10px_35px_rgba(65,50,35,0.08)] backdrop-blur-xl">
         <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-3 py-3 sm:px-5 lg:px-8">
+
           <Brand />
 
           <div className="hidden items-center gap-8 font-semibold text-[#514536] lg:flex">
+
             <a
               href="#inicio"
               className="border-b-2 border-transparent py-2 transition hover:border-[#60735c] hover:text-[#60735c]"
@@ -175,6 +181,7 @@ export default function HomePage() {
             >
               Blog
             </a>
+
           </div>
 
           <a
@@ -203,11 +210,13 @@ export default function HomePage() {
               <Menu size={22} />
             )}
           </button>
+
         </nav>
 
         {mobileMenuOpen && (
           <div className="border-t border-[#ded1c1] bg-[#f8f3e9] px-5 py-5 lg:hidden">
             <div className="mx-auto grid max-w-[1400px] gap-2 font-semibold">
+
               <a
                 href="#inicio"
                 onClick={closeMobileMenu}
@@ -257,24 +266,36 @@ export default function HomePage() {
                 <MessageCircle size={19} />
                 Iniciar sessão
               </a>
+
             </div>
           </div>
         )}
       </header>
 
+
       <main>
+
+        {/* =========================================
+            HERO
+        ========================================== */}
+
         <section
           id="inicio"
           className="relative overflow-hidden bg-[#3a3329]"
         >
+
           <div className="absolute -left-32 top-24 h-80 w-80 rounded-full bg-[#788a70]/20 blur-3xl" />
+
           <div className="absolute -right-20 bottom-0 h-96 w-96 rounded-full bg-[#b88e68]/20 blur-3xl" />
 
           <div className="absolute right-[12%] top-[12%] h-20 w-20 rounded-full border border-[#83927c]/30" />
+
           <div className="absolute right-[7%] top-[19%] h-8 w-8 rounded-full bg-[#788a70]/25" />
 
           <div className="relative mx-auto grid min-h-[760px] max-w-[1400px] items-center gap-14 px-6 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
+
             <div>
+
               <p className="inline-flex items-center gap-2 rounded-full border border-[#a9b89f]/40 bg-[#718069]/20 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.2em] text-[#dfe8d8]">
                 <Video size={16} />
                 Atendimento terapêutico online
@@ -301,6 +322,7 @@ export default function HomePage() {
               </p>
 
               <div className="mt-9 flex flex-col gap-4 sm:flex-row">
+
                 <a
                   href={whatsapp}
                   target="_blank"
@@ -317,9 +339,11 @@ export default function HomePage() {
                 >
                   Conhecer o atendimento
                 </a>
+
               </div>
 
               <div className="mt-9 flex flex-wrap gap-x-7 gap-y-4 text-sm font-semibold text-[#eee3d4]">
+
                 <span className="flex items-center gap-2">
                   <Video
                     size={18}
@@ -343,10 +367,14 @@ export default function HomePage() {
                   />
                   De onde você estiver
                 </span>
+
               </div>
+
             </div>
 
+
             <div className="relative mx-auto w-full max-w-[520px]">
+
               <div className="absolute -inset-5 rotate-3 rounded-[3rem] bg-[#718069]/45" />
 
               <div className="absolute -inset-3 -rotate-2 rounded-[3rem] border border-[#c9b391]/30 bg-white/5" />
@@ -358,12 +386,15 @@ export default function HomePage() {
               />
 
               <div className="absolute -bottom-7 -left-3 max-w-[290px] rounded-[1.7rem] border border-white/70 bg-[#fffaf2]/95 p-5 shadow-2xl backdrop-blur-xl md:-left-10">
+
                 <div className="flex items-start gap-3">
+
                   <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#dfe7d9] text-[#586851]">
                     <Video size={21} />
                   </span>
 
                   <div>
+
                     <p
                       className="text-2xl font-semibold text-[#3a3329]"
                       style={{
@@ -378,75 +409,268 @@ export default function HomePage() {
                       Cuidado emocional onde você
                       estiver.
                     </p>
+
                   </div>
+
                 </div>
+
               </div>
+
             </div>
+
           </div>
+
         </section>
+
+
+        {/* =========================================
+            SOBRE MIM
+        ========================================== */}
 
         <section
           id="sobre"
           className="relative overflow-hidden bg-[#f8f3e9]"
         >
+
           <div className="absolute -right-40 top-10 h-96 w-96 rounded-full bg-[#cbd6c4]/30 blur-3xl" />
 
-          <div className="relative mx-auto grid max-w-[1400px] gap-12 px-6 py-24 lg:grid-cols-[0.8fr_1.2fr] lg:px-8">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#8e7157]">
-                Sobre o atendimento
-              </p>
+          <div className="absolute -left-40 bottom-10 h-80 w-80 rounded-full bg-[#b88e68]/10 blur-3xl" />
 
-              <h2
-                className="mt-5 text-4xl font-semibold leading-tight text-[#382f27] md:text-6xl"
-                style={{
-                  fontFamily:
-                    '"Cormorant Garamond", serif',
-                }}
-              >
-                Uma abordagem focada em resultados breves.
-              </h2>
+          <div className="relative mx-auto max-w-[1400px] px-6 py-24 lg:px-8">
+
+            <div className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
+
+              {/* FOTO */}
+
+              <div className="relative mx-auto w-full max-w-[560px]">
+
+                <div className="absolute -inset-5 rotate-3 rounded-[3rem] bg-[#718069]/30" />
+
+                <div className="absolute -inset-3 -rotate-2 rounded-[3rem] border border-[#b99b78]/40 bg-white/30" />
+
+                <img
+                  src="/elisangela-sobre.jpeg"
+                  alt="Elisângela Fernandes, terapeuta emocional"
+                  className="relative aspect-[4/5] w-full rounded-[2.7rem] object-cover object-top shadow-[0_30px_70px_rgba(61,49,35,0.18)]"
+                />
+
+                <div className="absolute -bottom-6 -right-4 max-w-[290px] rounded-[1.7rem] border border-white/80 bg-[#fffaf2]/95 p-5 shadow-2xl backdrop-blur-xl md:-right-8">
+
+                  <div className="flex items-start gap-3">
+
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#dfe7d9] text-[#586851]">
+                      <Heart size={21} />
+                    </span>
+
+                    <div>
+
+                      <p
+                        className="text-2xl font-semibold text-[#3a3329]"
+                        style={{
+                          fontFamily:
+                            '"Cormorant Garamond", serif',
+                        }}
+                      >
+                        Sua história importa
+                      </p>
+
+                      <p className="mt-1 text-sm leading-6 text-[#786958]">
+                        Ela pode fazer parte do seu caminho,
+                        sem precisar definir o seu futuro.
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+
+              {/* TEXTO */}
+
+              <div>
+
+                <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#8e7157]">
+                  Sobre mim
+                </p>
+
+                <h2
+                  className="mt-5 text-4xl font-semibold leading-tight text-[#382f27] md:text-6xl"
+                  style={{
+                    fontFamily:
+                      '"Cormorant Garamond", serif',
+                  }}
+                >
+                  Um pouco da mulher por trás da terapeuta.
+                </h2>
+
+                <div className="mt-8 h-px w-24 bg-[#b99b78]" />
+
+                <div className="mt-8 rounded-[2.5rem] border border-white bg-white/50 p-8 shadow-[0_25px_70px_rgba(61,49,35,0.08)] md:p-10">
+
+                  <Leaf
+                    size={30}
+                    className="text-[#6c7c65]"
+                  />
+
+                  <p className="mt-6 text-lg leading-9 text-[#716253]">
+                    Olá! Sou Elisângela Fernandes, cristã e
+                    terapeuta com formação em Terapia de
+                    Reprocessamento Generativo (TRG) pelo
+                    Instituto Brasileiro de Formação de
+                    Terapeutas (IBFT), com registro CITRG nº
+                    20.678.
+                  </p>
+
+                  <p className="mt-6 text-lg leading-9 text-[#716253]">
+                    Ao longo da minha caminhada, encontrei
+                    na terapia uma forma de acolher pessoas
+                    que carregam dores, medos, traumas e
+                    experiências que, muitas vezes, continuam
+                    influenciando a maneira como vivem, se
+                    relacionam e enxergam a si mesmas.
+                  </p>
+
+                  <p className="mt-6 text-lg leading-9 text-[#716253]">
+                    Minha missão é acolher com respeito e
+                    ajudar você a compreender suas dores,
+                    traumas e experiências que ainda podem
+                    influenciar a sua vida.
+                  </p>
+
+                </div>
+
+
+                <div className="mt-8 grid gap-4 sm:grid-cols-2">
+
+                  <div className="rounded-[1.8rem] bg-[#dfe7d9] p-6">
+
+                    <p className="text-sm font-bold uppercase tracking-[0.15em] text-[#63715d]">
+                      Formação
+                    </p>
+
+                    <p
+                      className="mt-2 text-2xl font-semibold text-[#394533]"
+                      style={{
+                        fontFamily:
+                          '"Cormorant Garamond", serif',
+                      }}
+                    >
+                      TRG pelo IBFT
+                    </p>
+
+                  </div>
+
+
+                  <div className="rounded-[1.8rem] bg-[#ede3d5] p-6">
+
+                    <p className="text-sm font-bold uppercase tracking-[0.15em] text-[#8d7158]">
+                      Registro
+                    </p>
+
+                    <p
+                      className="mt-2 text-2xl font-semibold text-[#493d31]"
+                      style={{
+                        fontFamily:
+                          '"Cormorant Garamond", serif',
+                      }}
+                    >
+                      CITRG nº 20.678
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
             </div>
 
-            <div className="rounded-[2.5rem] border border-white bg-white/45 p-8 shadow-[0_25px_70px_rgba(61,49,35,0.08)] backdrop-blur-sm md:p-12">
-              <Leaf
-                size={30}
-                className="text-[#6c7c65]"
-              />
 
-              <p className="mt-6 text-lg leading-9 text-[#716253]">
-              O atendimento é realizado de forma online com prévio agendamento.
-              </p>
+            {/* PROPÓSITO */}
 
-              <p className="mt-6 text-lg leading-9 text-[#716253]">
-               Abordagem TRG: É uma Terapia de Reprocessamento Generativo, uma abordagem terapêutica breve que visa encontrar e reprocessar a raiz de traumas, dores emocionais e problemas psicossomáticos.
+            <div className="mt-20 grid gap-8 lg:grid-cols-2">
 
-              </p>
-              <p className="mt-6 text-lg leading-9 text-[#716253]">
-               Foco em resultados: É uma metodologia com começo, meio e fim, estruturada para resolver questões emocionais 
-               em um número reduzido de sessões.
+              <div className="rounded-[2.5rem] bg-[#3a3329] p-9 text-white shadow-[0_25px_70px_rgba(51,42,32,0.16)] md:p-12">
 
-              </p>
+                <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#cbb494]">
+                  Meu propósito
+                </p>
 
-              <a
-                href={whatsapp}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-9 inline-flex items-center gap-2 rounded-full bg-[#3a3329] px-7 py-4 font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#6c7c65]"
-              >
-                Falar com Elisângela
-                <ArrowRight size={18} />
-              </a>
+                <h3
+                  className="mt-5 text-4xl font-semibold leading-tight md:text-5xl"
+                  style={{
+                    fontFamily:
+                      '"Cormorant Garamond", serif',
+                  }}
+                >
+                  Você não precisa continuar presa às dores
+                  do passado.
+                </h3>
+
+                <p className="mt-6 text-lg leading-8 text-[#ded3c4]">
+                  Sua história importa, mas ela não precisa
+                  determinar o seu futuro.
+                </p>
+
+              </div>
+
+
+              <div className="rounded-[2.5rem] bg-[#dfe7d9] p-9 md:p-12">
+
+                <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#63715d]">
+                  Uma nova perspectiva
+                </p>
+
+                <h3
+                  className="mt-5 text-4xl font-semibold leading-tight text-[#394533] md:text-5xl"
+                  style={{
+                    fontFamily:
+                      '"Cormorant Garamond", serif',
+                  }}
+                >
+                  Comece hoje a reescrever a sua história.
+                </h3>
+
+                <p className="mt-6 text-lg leading-8 text-[#65705f]">
+                  Se você sente que chegou o momento de
+                  quebrar ciclos, eu posso te ajudar.
+                </p>
+
+                <a
+                  href={whatsapp}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#3a3329] px-7 py-4 font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#6c7c65]"
+                >
+                  Falar com Elisângela
+                  <ArrowRight size={18} />
+                </a>
+
+              </div>
+
             </div>
+
           </div>
+
         </section>
+
+
+        {/* =========================================
+            ATENDIMENTO
+        ========================================== */}
 
         <section
           id="atendimento"
           className="bg-[#ede3d5]"
         >
+
           <div className="mx-auto max-w-[1400px] px-6 py-24 lg:px-8">
+
             <div className="mx-auto max-w-3xl text-center">
+
               <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#8d7158]">
                 Atendimento terapêutico
               </p>
@@ -458,18 +682,19 @@ export default function HomePage() {
                     '"Cormorant Garamond", serif',
                 }}
               >
-                Cuidado emocional com direção e
-                propósito.
+                Cuidado emocional com direção e propósito.
               </h2>
 
               <p className="mt-6 text-lg leading-8 text-[#756657]">
-                Atendimento individual, online e
-                direcionado às necessidades de cada
-                pessoa.
+                Atendimento individual, online e direcionado
+                às necessidades de cada pessoa.
               </p>
+
             </div>
 
+
             <div className="mt-14 grid gap-6 md:grid-cols-3">
+
               {benefits.map((benefit) => {
                 const Icon = benefit.icon;
 
@@ -478,6 +703,7 @@ export default function HomePage() {
                     key={benefit.title}
                     className="group rounded-[2rem] border border-white/90 bg-[#fffdf8] p-8 shadow-[0_22px_60px_rgba(62,49,35,0.09)] transition hover:-translate-y-2 hover:border-[#9daf99]"
                   >
+
                     <span className="grid h-14 w-14 place-items-center rounded-full bg-[#dde5d8] text-[#53634e] transition group-hover:bg-[#6c7c65] group-hover:text-white">
                       <Icon size={25} />
                     </span>
@@ -495,13 +721,18 @@ export default function HomePage() {
                     <p className="mt-4 text-lg leading-8 text-[#7a6b5c]">
                       {benefit.text}
                     </p>
+
                   </article>
                 );
               })}
+
             </div>
 
+
             <div className="mt-16 grid overflow-hidden rounded-[2.8rem] bg-[#3a3329] shadow-[0_30px_80px_rgba(51,42,32,0.18)] lg:grid-cols-2">
+
               <div className="p-9 text-white md:p-14">
+
                 <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#cbb494]">
                   Cuidado individual
                 </p>
@@ -513,15 +744,14 @@ export default function HomePage() {
                       '"Cormorant Garamond", serif',
                   }}
                 >
-                  Quando as emoções começam a afetar sua
-                  rotina.
+                  Quando as emoções começam a afetar sua rotina.
                 </h3>
 
                 <p className="mt-6 text-lg leading-8 text-[#ded3c4]">
-                  Buscar ajuda pode ser um passo
-                  importante para compreender e
-                  transformar questões emocionais que
-                  continuam interferindo na sua vida.
+                  Buscar ajuda pode ser um passo importante
+                  para compreender e transformar questões
+                  emocionais que continuam interferindo na sua
+                  vida.
                 </p>
 
                 <a
@@ -533,35 +763,54 @@ export default function HomePage() {
                   Conversar pelo WhatsApp
                   <MessageCircle size={18} />
                 </a>
+
               </div>
 
+
               <div className="bg-[#6c7c65] p-9 text-white md:p-14">
+
                 <p className="mb-7 text-sm font-bold uppercase tracking-[0.22em] text-[#e0eadb]">
-                   Como posso ajudar:
+                  Como posso ajudar:
                 </p>
 
                 <ul className="grid gap-5">
+
                   {specialties.map((specialty) => (
                     <li
                       key={specialty}
                       className="flex items-center gap-3 border-b border-white/20 pb-4 text-lg"
                     >
+
                       <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/15">
                         <Check size={15} />
                       </span>
 
                       {specialty}
+
                     </li>
                   ))}
+
                 </ul>
+
               </div>
+
             </div>
+
           </div>
+
         </section>
 
+
+        {/* =========================================
+            ATENDIMENTO ONLINE
+        ========================================== */}
+
         <section className="bg-[#f8f3e9]">
+
           <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-6 py-24 lg:grid-cols-2 lg:px-8">
+
             <div className="rounded-[3rem] bg-[#dfe7d9] p-10 md:p-14">
+
               <span className="grid h-16 w-16 place-items-center rounded-full bg-[#6c7c65] text-white">
                 <Video size={29} />
               </span>
@@ -582,15 +831,20 @@ export default function HomePage() {
                 ambiente reservado e uma conexão com a
                 internet.
               </p>
+
             </div>
 
+
             <div className="grid gap-5">
+
               <div className="flex gap-5 rounded-[2rem] border border-[#e2d6c7] bg-white/60 p-7">
+
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#eee3d4] text-[#795f48]">
                   <Wifi size={23} />
                 </span>
 
                 <div>
+
                   <h3
                     className="text-2xl font-semibold"
                     style={{
@@ -603,18 +857,22 @@ export default function HomePage() {
 
                   <p className="mt-2 leading-7 text-[#796a5b]">
                     Atendimento online realizado no local
-                    em que você se sentir mais
-                    confortável.
+                    em que você se sentir mais confortável.
                   </p>
+
                 </div>
+
               </div>
 
+
               <div className="flex gap-5 rounded-[2rem] border border-[#e2d6c7] bg-white/60 p-7">
+
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#dfe7d9] text-[#586851]">
                   <ShieldCheck size={23} />
                 </span>
 
                 <div>
+
                   <h3
                     className="text-2xl font-semibold"
                     style={{
@@ -629,15 +887,20 @@ export default function HomePage() {
                     Um atendimento individual conduzido
                     com segurança e confidencialidade.
                   </p>
+
                 </div>
+
               </div>
 
+
               <div className="flex gap-5 rounded-[2rem] border border-[#e2d6c7] bg-white/60 p-7">
+
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-[#eee3d4] text-[#795f48]">
                   <Leaf size={23} />
                 </span>
 
                 <div>
+
                   <h3
                     className="text-2xl font-semibold"
                     style={{
@@ -649,21 +912,34 @@ export default function HomePage() {
                   </h3>
 
                   <p className="mt-2 leading-7 text-[#796a5b]">
-                    Mais facilidade para incluir o
-                    cuidado emocional na sua rotina.
+                    Mais facilidade para incluir o cuidado
+                    emocional na sua rotina.
                   </p>
+
                 </div>
+
               </div>
+
             </div>
+
           </div>
+
         </section>
+
+
+        {/* =========================================
+            DÚVIDAS
+        ========================================== */}
 
         <section
           id="duvidas"
           className="border-y border-[#ded1c1] bg-[#eee4d6]"
         >
+
           <div className="mx-auto grid max-w-[1400px] gap-12 px-6 py-24 lg:grid-cols-[0.75fr_1.25fr] lg:px-8">
+
             <div>
+
               <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#8d7158]">
                 Dúvidas frequentes
               </p>
@@ -675,23 +951,26 @@ export default function HomePage() {
                     '"Cormorant Garamond", serif',
                 }}
               >
-                Informações para você se sentir mais
-                segura.
+                Informações para você se sentir mais segura.
               </h2>
 
               <p className="mt-6 leading-8 text-[#79695a]">
-                Para outras informações, converse
-                diretamente com a Elisângela pelo
-                WhatsApp.
+                Para outras informações, converse diretamente
+                com a Elisângela pelo WhatsApp.
               </p>
+
             </div>
 
+
             <div className="divide-y divide-[#d5c6b4] border-y border-[#d5c6b4]">
+
               {questions.map((question, index) => {
+
                 const open = openQuestion === index;
 
                 return (
                   <article key={question.title}>
+
                     <button
                       type="button"
                       onClick={() =>
@@ -701,6 +980,7 @@ export default function HomePage() {
                       }
                       className="flex w-full items-center justify-between gap-5 py-6 text-left"
                     >
+
                       <span
                         className="text-xl font-semibold md:text-2xl"
                         style={{
@@ -717,6 +997,7 @@ export default function HomePage() {
                           open ? "rotate-180" : ""
                         }`}
                       />
+
                     </button>
 
                     {open && (
@@ -724,51 +1005,76 @@ export default function HomePage() {
                         {question.text}
                       </p>
                     )}
+
                   </article>
                 );
+
               })}
+
             </div>
+
           </div>
+
         </section>
-<section
-  id="blog"
-  className="bg-[#dfe7d9]"
->
-  <div className="mx-auto max-w-[1400px] px-6 py-24 text-center lg:px-8">
-    <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#63715d]">
-      Conteúdo e informação
-    </p>
 
-    <h2
-      className="mt-5 text-4xl font-semibold md:text-6xl"
-      style={{
-        fontFamily:
-          '"Cormorant Garamond", serif',
-      }}
-    >
-      Conheça o blog da Elisângela
-    </h2>
 
-    <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#63705e]">
-      Conteúdos sobre terapia emocional,
-      transformação e cuidado individual.
-    </p>
+        {/* =========================================
+            BLOG
+        ========================================== */}
 
-    <Link
-      to="/blog"
-      className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#3a3329] px-8 py-4 font-bold text-white"
-    >
-      Ver publicações
-      <ArrowRight size={18} />
-    </Link>
-  </div>
-</section>
+        <section
+          id="blog"
+          className="bg-[#dfe7d9]"
+        >
+
+          <div className="mx-auto max-w-[1400px] px-6 py-24 text-center lg:px-8">
+
+            <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#63715d]">
+              Conteúdo e informação
+            </p>
+
+            <h2
+              className="mt-5 text-4xl font-semibold md:text-6xl"
+              style={{
+                fontFamily:
+                  '"Cormorant Garamond", serif',
+              }}
+            >
+              Conheça o blog da Elisângela
+            </h2>
+
+            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#63705e]">
+              Conteúdos sobre terapia emocional,
+              transformação e cuidado individual.
+            </p>
+
+            <Link
+              to="/blog"
+              className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#3a3329] px-8 py-4 font-bold text-white"
+            >
+              Ver publicações
+              <ArrowRight size={18} />
+            </Link>
+
+          </div>
+
+        </section>
+
+
+        {/* =========================================
+            CTA FINAL
+        ========================================== */}
+
         <section className="bg-[#f8f3e9] px-5 py-20">
+
           <div className="relative mx-auto max-w-[1200px] overflow-hidden rounded-[3rem] bg-[#3a3329] px-7 py-16 text-center text-white shadow-[0_30px_80px_rgba(55,43,31,0.22)] md:px-14">
+
             <div className="absolute -left-16 -top-16 h-52 w-52 rounded-full bg-[#718069]/30 blur-2xl" />
+
             <div className="absolute -bottom-20 -right-12 h-64 w-64 rounded-full bg-[#a67f5d]/20 blur-2xl" />
 
             <div className="relative">
+
               <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#cbb894]">
                 Atendimento online
               </p>
@@ -780,14 +1086,12 @@ export default function HomePage() {
                     '"Cormorant Garamond", serif',
                 }}
               >
-                Comece seu processo de transformação
-                emocional.
+                Comece seu processo de transformação emocional.
               </h2>
 
               <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#ddd3c4]">
-                Entre em contato para receber
-                informações sobre o atendimento,
-                disponibilidade e valores.
+                Entre em contato para receber informações
+                sobre o atendimento, disponibilidade e valores.
               </p>
 
               <a
@@ -799,10 +1103,17 @@ export default function HomePage() {
                 <MessageCircle size={19} />
                 Falar pelo WhatsApp
               </a>
+
             </div>
+
           </div>
+
         </section>
+
       </main>
+
+
+      {/* BOTÃO FLUTUANTE WHATSAPP */}
 
       <a
         href={whatsapp}
@@ -814,11 +1125,17 @@ export default function HomePage() {
         <MessageCircle size={28} />
       </a>
 
+
+      {/* FOOTER */}
+
       <footer className="border-t border-[#d9ccbb] bg-[#eee4d6]">
+
         <div className="mx-auto grid max-w-[1400px] gap-10 px-6 py-12 md:grid-cols-3 lg:px-8">
+
           <Brand footer />
 
           <div>
+
             <strong
               className="text-xl font-semibold"
               style={{
@@ -830,18 +1147,34 @@ export default function HomePage() {
             </strong>
 
             <div className="mt-4 grid gap-2 text-[#716153]">
-              <a href="#inicio">Início</a>
-              <a href="#sobre">Sobre</a>
+
+              <a href="#inicio">
+                Início
+              </a>
+
+              <a href="#sobre">
+                Sobre
+              </a>
+
               <a href="#atendimento">
                 Atendimento
               </a>
-              <a href="#duvidas">Dúvidas</a>
-<Link to="/blog">
-  Blog
-</Link>            </div>
+
+              <a href="#duvidas">
+                Dúvidas
+              </a>
+
+              <Link to="/blog">
+                Blog
+              </Link>
+
+            </div>
+
           </div>
 
+
           <div>
+
             <strong
               className="text-xl font-semibold"
               style={{
@@ -853,8 +1186,7 @@ export default function HomePage() {
             </strong>
 
             <p className="mt-4 leading-7 text-[#716153]">
-              Entre em contato para receber mais
-              informações.
+              Entre em contato para receber mais informações.
             </p>
 
             <a
@@ -866,11 +1198,16 @@ export default function HomePage() {
               <MessageCircle size={18} />
               Conversar pelo WhatsApp
             </a>
+
           </div>
+
         </div>
 
+
         <div className="border-t border-[#d9ccbb] px-5 py-6">
+
           <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-4 text-center text-sm text-[#7f6e5e] sm:flex-row">
+
             <p>
               © {new Date().getFullYear()} Elisângela
               Fernandes
@@ -883,9 +1220,13 @@ export default function HomePage() {
               <LockKeyhole size={14} />
               Área da terapeuta
             </Link>
+
           </div>
+
         </div>
+
       </footer>
+
     </div>
   );
 }
