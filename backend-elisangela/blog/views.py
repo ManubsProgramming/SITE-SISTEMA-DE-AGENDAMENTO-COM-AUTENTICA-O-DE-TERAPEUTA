@@ -1,13 +1,18 @@
 import os
 
 from django.core.files.storage import default_storage
-from django.conf import settings
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+
 from rest_framework import status
 from rest_framework.decorators import (
     api_view,
+    parser_classes,
     permission_classes,
+)
+from rest_framework.parsers import (
+    FormParser,
+    MultiPartParser,
 )
 from rest_framework.permissions import (
     AllowAny,
@@ -80,7 +85,9 @@ def public_post_detail(request, slug):
         post
     )
 
-    return Response(serializer.data)
+    return Response(
+        serializer.data
+    )
 
 
 @api_view(["GET", "POST"])
@@ -97,9 +104,7 @@ def dashboard_posts(request):
         if search:
             posts = posts.filter(
                 Q(title__icontains=search)
-                | Q(
-                    category__icontains=search
-                )
+                | Q(category__icontains=search)
             )
 
         serializer = (
@@ -115,9 +120,15 @@ def dashboard_posts(request):
 
     serializer = DashboardBlogPostSerializer(
         data=request.data,
-        context={"request": request},
+        context={
+            "request": request
+        },
     )
-    serializer.is_valid(raise_exception=True)
+
+    serializer.is_valid(
+        raise_exception=True
+    )
+
     post = serializer.save()
 
     return Response(
@@ -130,7 +141,10 @@ def dashboard_posts(request):
 
 @api_view(["GET", "PUT", "DELETE"])
 @permission_classes([IsAdminUser])
-def dashboard_post_detail(request, post_id):
+def dashboard_post_detail(
+    request,
+    post_id,
+):
     post = get_object_or_404(
         BlogPost,
         id=post_id,
@@ -153,9 +167,15 @@ def dashboard_post_detail(request, post_id):
     serializer = DashboardBlogPostSerializer(
         post,
         data=request.data,
-        context={"request": request},
+        context={
+            "request": request
+        },
     )
-    serializer.is_valid(raise_exception=True)
+
+    serializer.is_valid(
+        raise_exception=True
+    )
+
     updated_post = serializer.save()
 
     return Response(
@@ -163,14 +183,23 @@ def dashboard_post_detail(request, post_id):
             updated_post
         ).data
     )
+
+
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
+@parser_classes([
+    MultiPartParser,
+    FormParser,
+])
 def upload_blog_image(request):
     image = request.FILES.get("image")
 
     if not image:
         return Response(
-            {"detail": "Nenhuma imagem foi enviada."},
+            {
+                "detail":
+                "Nenhuma imagem foi enviada."
+            },
             status=status.HTTP_400_BAD_REQUEST,
         )
 
@@ -200,11 +229,14 @@ def upload_blog_image(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    extension = os.path.splitext(image.name)[1].lower()
+    extension = os.path.splitext(
+        image.name
+    )[1].lower()
 
     filename = (
-        f"blog/capas/"
-        f"{os.urandom(16).hex()}{extension}"
+        "blog/capas/"
+        f"{os.urandom(16).hex()}"
+        f"{extension}"
     )
 
     saved_path = default_storage.save(
@@ -212,12 +244,18 @@ def upload_blog_image(request):
         image,
     )
 
-    url = default_storage.url(saved_path)
+    url = default_storage.url(
+        saved_path
+    )
 
     if not url.startswith("http"):
-        url = request.build_absolute_uri(url)
+        url = request.build_absolute_uri(
+            url
+        )
 
     return Response(
-        {"url": url},
+        {
+            "url": url
+        },
         status=status.HTTP_201_CREATED,
     )

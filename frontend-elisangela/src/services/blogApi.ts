@@ -113,7 +113,8 @@ export async function getDashboardBlogPosts(): Promise<
 export async function createBlogPost(
   input: BlogPostInput,
 ): Promise<BlogPost> {
-  const csrfToken = await getCsrfToken();
+  const csrfToken =
+    await getCsrfToken();
 
   return jsonRequest<BlogPost>(
     "/blog/dashboard/posts/",
@@ -131,7 +132,8 @@ export async function updateBlogPost(
   postId: number,
   input: BlogPostInput,
 ): Promise<BlogPost> {
-  const csrfToken = await getCsrfToken();
+  const csrfToken =
+    await getCsrfToken();
 
   return jsonRequest<BlogPost>(
     `/blog/dashboard/posts/${postId}/`,
@@ -145,35 +147,18 @@ export async function updateBlogPost(
   );
 }
 
-export async function deleteBlogPost(
-  postId: number,
-): Promise<void> {
-  const csrfToken = await getCsrfToken();
-
-  const response = await fetch(
-    `${API_URL}/blog/dashboard/posts/${postId}/`,
-    {
-      method: "DELETE",
-      credentials: "include",
-      headers: {
-        "X-CSRFToken": csrfToken,
-      },
-    },
-  );
-
-  if (!response.ok) {
-    throw new Error(
-      "Não foi possível excluir a publicação.",
-    );
-  }
-}
 export async function uploadBlogCoverImage(
   file: File,
 ): Promise<{ url: string }> {
-  const csrfToken = await getCsrfToken();
+  const csrfToken =
+    await getCsrfToken();
 
   const formData = new FormData();
-  formData.append("image", file);
+
+  formData.append(
+    "image",
+    file,
+  );
 
   const response = await fetch(
     `${API_URL}/blog/dashboard/upload-image/`,
@@ -207,5 +192,31 @@ export async function uploadBlogCoverImage(
     throw new Error(detail);
   }
 
-  return data;
+  return data as {
+    url: string;
+  };
+}
+
+export async function deleteBlogPost(
+  postId: number,
+): Promise<void> {
+  const csrfToken =
+    await getCsrfToken();
+
+  const response = await fetch(
+    `${API_URL}/blog/dashboard/posts/${postId}/`,
+    {
+      method: "DELETE",
+      credentials: "include",
+      headers: {
+        "X-CSRFToken": csrfToken,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Não foi possível excluir a publicação.",
+    );
+  }
 }
