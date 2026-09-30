@@ -270,52 +270,83 @@ export default function DashboardPage() {
         </section>
 
         {generatedLink && (
-          <section className="generated-link-card">
-            <div>
-              <strong>
-                Link gerado com sucesso
-              </strong>
+  <section className="generated-link-card">
 
-              <span>
-                Este link é individual e
-                poderá ser usado uma vez.
-              </span>
-            </div>
+    <div className="generated-link-header">
+      <div className="generated-link-success-icon">
+        <Check size={22} strokeWidth={2.5} />
+      </div>
 
-            <div className="generated-link-field">
-              <input
-                type="text"
-                value={generatedLink}
-                readOnly
-                aria-label="Link da anamnese"
-              />
+      <div className="generated-link-header-text">
+        <strong>
+          Link gerado com sucesso
+        </strong>
 
-              <button
-                type="button"
-                onClick={handleCopyLink}
-              >
-                {copied ? (
-                  <Check size={18} />
-                ) : (
-                  <Clipboard size={18} />
-                )}
+        <span>
+          Este link é individual e poderá ser
+          usado uma vez.
+        </span>
+      </div>
+    </div>
 
-                {copied
-                  ? "Copiado"
-                  : "Copiar"}
-              </button>
-            </div>
+    <div className="generated-link-content">
 
-            <a
-              href={generatedLink}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <ExternalLink size={17} />
-              Abrir link
-            </a>
-          </section>
-        )}
+      <label
+        className="generated-link-label"
+        htmlFor="anamnesis-generated-link"
+      >
+        Link da anamnese
+      </label>
+
+      <div className="generated-link-field">
+        <input
+          id="anamnesis-generated-link"
+          type="text"
+          value={generatedLink}
+          readOnly
+          aria-label="Link da anamnese"
+          onFocus={(event) =>
+            event.currentTarget.select()
+          }
+        />
+
+        <button
+          type="button"
+          onClick={handleCopyLink}
+          className={
+            copied
+              ? "copied"
+              : ""
+          }
+        >
+          {copied ? (
+            <>
+              <Check size={18} />
+              Link copiado!
+            </>
+          ) : (
+            <>
+              <Clipboard size={18} />
+              Copiar link
+            </>
+          )}
+        </button>
+      </div>
+
+      <a
+        className="generated-link-open"
+        href={generatedLink}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <ExternalLink size={17} />
+        Abrir link
+      </a>
+
+    </div>
+  </section>
+)}
+        
 
         <section className="summary-grid dashboard-summary-simple">
           <a

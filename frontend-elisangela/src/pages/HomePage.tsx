@@ -55,7 +55,7 @@ const questions = [
   },
   {
     title: "Como funciona a primeira sessão?",
-    text: "É enviado um formulário de anamnese e após o recebimento do formulário, a primeira sessão é agendada.",
+    text: "É enviado um formulário de anamnese e após o recebimento do formulário devidamente preenchido, a primeira sessão é agendada.",
   },
   {
     title: "Qual a frequência das sessões?",
@@ -71,7 +71,7 @@ const questions = [
   },
   {
     title:"O que é conversado nas sessões é sigiloso?",
-    text:" Sim, todas as informações compartilhadas durante as sessões são confidenciais e protegidas por sigilo profissional.",
+    text:" Sim, todas as informações compartilhadas durante as sessões são confidenciais e protegidas por sigilo profissional. Conforme Código de Ética do Conselho Internacional de Terapia de Reprocessamento Generativo (CITRG).",
   }
 ];
 
@@ -385,36 +385,7 @@ export default function HomePage() {
                 className="relative aspect-[4/5] w-full rounded-[2.7rem] object-cover object-top shadow-[0_35px_80px_rgba(0,0,0,0.32)]"
               />
 
-              <div className="absolute -bottom-7 -left-3 max-w-[290px] rounded-[1.7rem] border border-white/70 bg-[#fffaf2]/95 p-5 shadow-2xl backdrop-blur-xl md:-left-10">
-
-                <div className="flex items-start gap-3">
-
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#dfe7d9] text-[#586851]">
-                    <Video size={21} />
-                  </span>
-
-                  <div>
-
-                    <p
-                      className="text-2xl font-semibold text-[#3a3329]"
-                      style={{
-                        fontFamily:
-                          '"Cormorant Garamond", serif',
-                      }}
-                    >
-                      Atendimento online
-                    </p>
-
-                    <p className="mt-1 text-sm leading-6 text-[#786958]">
-                      Cuidado emocional onde você
-                      estiver.
-                    </p>
-
-                  </div>
-
-                </div>
-
-              </div>
+              
 
             </div>
 
@@ -454,36 +425,7 @@ export default function HomePage() {
                   className="relative aspect-[4/5] w-full rounded-[2.7rem] object-cover object-top shadow-[0_30px_70px_rgba(61,49,35,0.18)]"
                 />
 
-                <div className="absolute -bottom-6 -right-4 max-w-[290px] rounded-[1.7rem] border border-white/80 bg-[#fffaf2]/95 p-5 shadow-2xl backdrop-blur-xl md:-right-8">
-
-                  <div className="flex items-start gap-3">
-
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#dfe7d9] text-[#586851]">
-                      <Heart size={21} />
-                    </span>
-
-                    <div>
-
-                      <p
-                        className="text-2xl font-semibold text-[#3a3329]"
-                        style={{
-                          fontFamily:
-                            '"Cormorant Garamond", serif',
-                        }}
-                      >
-                        Sua história importa
-                      </p>
-
-                      <p className="mt-1 text-sm leading-6 text-[#786958]">
-                        Ela pode fazer parte do seu caminho,
-                        sem precisar definir o seu futuro.
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                </div>
+                
 
               </div>
 
@@ -496,15 +438,7 @@ export default function HomePage() {
                   Sobre mim
                 </p>
 
-                <h2
-                  className="mt-5 text-4xl font-semibold leading-tight text-[#382f27] md:text-6xl"
-                  style={{
-                    fontFamily:
-                      '"Cormorant Garamond", serif',
-                  }}
-                >
-                  Um pouco da mulher por trás da terapeuta.
-                </h2>
+              
 
                 <div className="mt-8 h-px w-24 bg-[#b99b78]" />
 
@@ -540,49 +474,20 @@ export default function HomePage() {
                     influenciar a sua vida.
                   </p>
 
+                  <p className="mt-6 text-lg leading-9 text-[#716253]">
+                    Você não precisa continuar vivendo presa às dores do passado, assistindo os ciclos se repetirem.
+                    Sua história importa, mas ela não precisa determinar o seu futuro.
+                  </p>
+
+                  <p className="mt-6 text-lg leading-9 text-[#716253]">
+                    Se você sente que chegou o momento de quebrar ciclos, eu posso te ajudar!
+                    Comece hoje a reescrever a sua história.
+                  </p>
+
+
                 </div>
 
 
-                <div className="mt-8 grid gap-4 sm:grid-cols-2">
-
-                  <div className="rounded-[1.8rem] bg-[#dfe7d9] p-6">
-
-                    <p className="text-sm font-bold uppercase tracking-[0.15em] text-[#63715d]">
-                      Formação
-                    </p>
-
-                    <p
-                      className="mt-2 text-2xl font-semibold text-[#394533]"
-                      style={{
-                        fontFamily:
-                          '"Cormorant Garamond", serif',
-                      }}
-                    >
-                      TRG pelo IBFT
-                    </p>
-
-                  </div>
-
-
-                  <div className="rounded-[1.8rem] bg-[#ede3d5] p-6">
-
-                    <p className="text-sm font-bold uppercase tracking-[0.15em] text-[#8d7158]">
-                      Registro
-                    </p>
-
-                    <p
-                      className="mt-2 text-2xl font-semibold text-[#493d31]"
-                      style={{
-                        fontFamily:
-                          '"Cormorant Garamond", serif',
-                      }}
-                    >
-                      CITRG nº 20.678
-                    </p>
-
-                  </div>
-
-                </div>
 
               </div>
 
@@ -956,7 +861,7 @@ export default function HomePage() {
 
               <p className="mt-6 leading-8 text-[#79695a]">
                 Para outras informações, converse diretamente
-                com a Elisângela pelo WhatsApp.
+                com a terapeuta pelo WhatsApp.
               </p>
 
             </div>
