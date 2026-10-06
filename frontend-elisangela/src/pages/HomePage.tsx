@@ -497,7 +497,7 @@ export default function HomePage() {
 
         </section>
 
-           <div className="mt-10 grid overflow-hidden rounded-[2.2rem] bg-[#3a3329] shadow-[0_25px_65px_rgba(51,42,32,0.16)] sm:mt-14 sm:rounded-[2.8rem] lg:grid-cols-2">
+           <div className="mx-auto mt-10 grid w-[94%] max-w-[1500px] overflow-hidden rounded-[2.8rem] bg-[#3a3329] shadow-[0_30px_80px_rgba(51,42,32,0.18)] lg:w-[92%] lg:grid-cols-2">
               <div className="p-6 text-white sm:p-9 md:p-12 lg:p-14">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#cbb494] sm:text-sm sm:tracking-[0.22em]">
                   Cuidado individual
