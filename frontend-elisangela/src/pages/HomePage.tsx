@@ -302,7 +302,7 @@ export default function HomePage() {
               </p>
 
               <h1
-                className="mt-8 max-w-4xl text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-[#fff8ed] md:text-7xl lg:text-[5.4rem]"
+                className="mt-7 max-w-4xl text-[2.6rem] font-semibold leading-[1.02] tracking-[-0.03em] text-[#fff8ed] sm:text-5xl md:text-7xl lg:text-[5.4rem]"
                 style={{
                   fontFamily:
                     '"Cormorant Garamond", serif',
@@ -494,73 +494,79 @@ export default function HomePage() {
             </div>
 
 
-            {/* PROPÓSITO */}
 
-            <div className="mt-20 grid gap-8 lg:grid-cols-2">
+          </div>
 
-              <div className="rounded-[2.5rem] bg-[#3a3329] p-9 text-white shadow-[0_25px_70px_rgba(51,42,32,0.16)] md:p-12">
+        </section>
+
+           <div className="mt-16 grid overflow-hidden rounded-[2.8rem] bg-[#3a3329] shadow-[0_30px_80px_rgba(51,42,32,0.18)] lg:grid-cols-2">
+
+              <div className="p-9 text-white md:p-14">
 
                 <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#cbb494]">
-                  Meu propósito
+                  Cuidado individual
                 </p>
 
                 <h3
-                  className="mt-5 text-4xl font-semibold leading-tight md:text-5xl"
+                  className="mt-5 text-4xl font-semibold md:text-5xl"
                   style={{
                     fontFamily:
                       '"Cormorant Garamond", serif',
                   }}
                 >
-                  Você não precisa continuar presa às dores
-                  do passado.
+                  Quando as emoções começam a afetar sua rotina.
                 </h3>
 
                 <p className="mt-6 text-lg leading-8 text-[#ded3c4]">
-                  Sua história importa, mas ela não precisa
-                  determinar o seu futuro.
-                </p>
-
-              </div>
-
-
-              <div className="rounded-[2.5rem] bg-[#dfe7d9] p-9 md:p-12">
-
-                <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#63715d]">
-                  Uma nova perspectiva
-                </p>
-
-                <h3
-                  className="mt-5 text-4xl font-semibold leading-tight text-[#394533] md:text-5xl"
-                  style={{
-                    fontFamily:
-                      '"Cormorant Garamond", serif',
-                  }}
-                >
-                  Comece hoje a reescrever a sua história.
-                </h3>
-
-                <p className="mt-6 text-lg leading-8 text-[#65705f]">
-                  Se você sente que chegou o momento de
-                  quebrar ciclos, eu posso te ajudar.
+                  Buscar ajuda pode ser um passo importante
+                  para compreender e transformar questões
+                  emocionais que continuam interferindo na sua
+                  vida.
                 </p>
 
                 <a
                   href={whatsapp}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#3a3329] px-7 py-4 font-bold text-white transition hover:-translate-y-0.5 hover:bg-[#6c7c65]"
+                  className="mt-9 inline-flex items-center gap-2 rounded-full bg-[#dfe7d9] px-7 py-4 font-bold text-[#394533] transition hover:bg-white"
                 >
-                  Falar com Elisângela
-                  <ArrowRight size={18} />
+                  Conversar pelo WhatsApp
+                  <MessageCircle size={18} />
                 </a>
+
+              </div>
+
+
+              <div className="bg-[#6c7c65] p-9 text-white md:p-14">
+
+                <p className="mb-7 text-sm font-bold uppercase tracking-[0.22em] text-[#e0eadb]">
+                  Como posso ajudar:
+                </p>
+
+                <ul className="grid gap-5">
+
+                  {specialties.map((specialty) => (
+                    <li
+                      key={specialty}
+                      className="flex items-center gap-3 border-b border-white/20 pb-4 text-lg"
+                    >
+
+                      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/15">
+                        <Check size={15} />
+                      </span>
+
+                      {specialty}
+
+                    </li>
+                  ))}
+
+                </ul>
 
               </div>
 
             </div>
 
-          </div>
 
-        </section>
 
 
         {/* =========================================
@@ -634,72 +640,6 @@ export default function HomePage() {
             </div>
 
 
-            <div className="mt-16 grid overflow-hidden rounded-[2.8rem] bg-[#3a3329] shadow-[0_30px_80px_rgba(51,42,32,0.18)] lg:grid-cols-2">
-
-              <div className="p-9 text-white md:p-14">
-
-                <p className="text-sm font-bold uppercase tracking-[0.22em] text-[#cbb494]">
-                  Cuidado individual
-                </p>
-
-                <h3
-                  className="mt-5 text-4xl font-semibold md:text-5xl"
-                  style={{
-                    fontFamily:
-                      '"Cormorant Garamond", serif',
-                  }}
-                >
-                  Quando as emoções começam a afetar sua rotina.
-                </h3>
-
-                <p className="mt-6 text-lg leading-8 text-[#ded3c4]">
-                  Buscar ajuda pode ser um passo importante
-                  para compreender e transformar questões
-                  emocionais que continuam interferindo na sua
-                  vida.
-                </p>
-
-                <a
-                  href={whatsapp}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-9 inline-flex items-center gap-2 rounded-full bg-[#dfe7d9] px-7 py-4 font-bold text-[#394533] transition hover:bg-white"
-                >
-                  Conversar pelo WhatsApp
-                  <MessageCircle size={18} />
-                </a>
-
-              </div>
-
-
-              <div className="bg-[#6c7c65] p-9 text-white md:p-14">
-
-                <p className="mb-7 text-sm font-bold uppercase tracking-[0.22em] text-[#e0eadb]">
-                  Como posso ajudar:
-                </p>
-
-                <ul className="grid gap-5">
-
-                  {specialties.map((specialty) => (
-                    <li
-                      key={specialty}
-                      className="flex items-center gap-3 border-b border-white/20 pb-4 text-lg"
-                    >
-
-                      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white/15">
-                        <Check size={15} />
-                      </span>
-
-                      {specialty}
-
-                    </li>
-                  ))}
-
-                </ul>
-
-              </div>
-
-            </div>
 
           </div>
 
